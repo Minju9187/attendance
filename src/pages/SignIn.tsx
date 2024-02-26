@@ -2,6 +2,7 @@ import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ export default function SignIn() {
 
   return (
     <>
-      <form>
+      <Form>
         <label htmlFor="email">이메일</label>
         <input
           id="email"
@@ -47,7 +48,6 @@ export default function SignIn() {
           required
           autoComplete="current-email"
         />
-
         <label htmlFor="password">비밀번호</label>
         <input
           id="password"
@@ -59,8 +59,13 @@ export default function SignIn() {
           autoComplete="current-password"
         />
         <button onClick={signIn}>로그인</button>
-        <button onClick={() => navigate("/signUp")}>회원가입</button>
-      </form>
+        <button onClick={() => navigate("/signup")}>회원가입</button>
+      </Form>
     </>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;

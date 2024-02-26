@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function SignUp() {
   };
 
   const handleSignUp = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     navigate("/signup/setProfile", {
       state: { email: email, password: password },
     });
@@ -31,7 +32,7 @@ export default function SignUp() {
 
   return (
     <>
-      <form onSubmit={handleSignUp}>
+      <Form onSubmit={handleSignUp}>
         <label htmlFor="email">이메일</label>
         <input
           id="email"
@@ -68,7 +69,12 @@ export default function SignUp() {
           autoComplete="new-password"
         />
         <button type="submit">다음</button>
-      </form>
+      </Form>
     </>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
