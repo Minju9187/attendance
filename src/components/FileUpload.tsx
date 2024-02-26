@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { storage } from "../firebase";
+import React, { useEffect, useState } from "react";
+import { storage, auth } from "../firebase";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadString,
+} from "firebase/storage";
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
