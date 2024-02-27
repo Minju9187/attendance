@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import LoginForm from "@/components/LoginForm";
 
 export default function SetProfile() {
   const navigate = useNavigate();
@@ -21,9 +22,14 @@ export default function SetProfile() {
     }
   };
 
+  const startApp = async () => {
+    const userInfo = doc(db, "userInfo");
+    navigate("/signin");
+  };
+
   return (
     <>
-      <Form>
+      <Form onSubmit={startApp}>
         <div>사진선택창</div>
         <label htmlFor="username">사용자 이름</label>
         <input
@@ -45,6 +51,7 @@ export default function SetProfile() {
         />
         <button type="submit">시작하기</button>
       </Form>
+      <LoginForm />
     </>
   );
 }
