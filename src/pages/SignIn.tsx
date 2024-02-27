@@ -83,6 +83,7 @@ export default function SignIn() {
         <button type="submit" disabled={!watchEmail || !watchPassword}>
           로그인
         </button>
+        <button onClick={() => navigate("/signup")}>회원가입</button>
       </Form>
     </>
   );
