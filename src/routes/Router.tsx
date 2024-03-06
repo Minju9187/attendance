@@ -8,6 +8,7 @@ import SetProfile from "@/pages/SetProfile";
 import Check from "@/pages/Check";
 import Survey from "@/pages/Survey";
 import Profile from "@/pages/Profile";
+import Calendar from "@/pages/Calendar";
 
 export default function Router() {
   return (
@@ -20,6 +21,7 @@ export default function Router() {
         <Route path="/home" element={<Home />} />
         <Route path="/survey/:postId" element={<Survey />} />
         <Route path="/check/:id" element={<Check />} />
+        <Route path="/calendar/:id" element={<Calendar />} />
         <Route path="/profile/:id" element={<Profile />} />
       </Routes>
     </>
