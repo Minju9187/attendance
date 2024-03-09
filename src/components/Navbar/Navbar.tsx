@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import HomeIcon from "@/assets/images/icon-home.svg";
-import CalendarIcon from "@/assets/images/icon-calendar.svg";
-import ProfileIcon from "@/assets/images/icon-profile.svg";
+import HomeIcon from "@/assets/images/icon-home.svg?react";
+import CalendarIcon from "@/assets/images/icon-calendar.svg?react";
+import ProfileIcon from "@/assets/images/icon-profile.svg?react";
 
 export default function Navbar() {
   const auth = getAuth();
@@ -20,14 +20,14 @@ export default function Navbar() {
     <>
       <NavContainer>
         <NavLinkTag to={"/home"}>
-          <img src={HomeIcon} alt="home" />홈
+          <HomeIcon />홈
         </NavLinkTag>
         <NavLinkTag to={`/calendar/${data?.uid}`}>
-          <img src={CalendarIcon} alt="calendar" />
+          <CalendarIcon />
           캘린더
         </NavLinkTag>
         <NavLinkTag to={`/profile/${data?.uid}`}>
-          <img src={ProfileIcon} alt="profile" />
+          <ProfileIcon />
           프로필
         </NavLinkTag>
       </NavContainer>
