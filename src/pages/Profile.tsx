@@ -4,6 +4,7 @@ import { collection, where, getDocs, query } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
+import styled from "styled-components";
 
 export default function Profile() {
   const { uid } = useParams();
@@ -44,14 +45,103 @@ export default function Profile() {
   return (
     <>
       <Topbar />
-      <div>{userData?.userId}</div>
-      <div>{userData?.username}</div>
-      <div>{userData?.resolution}</div>
-      <div>{userData?.오전출석}</div>
-      <div>{userData?.오후출석}</div>
-      <div>{userData?.지각}</div>
-      <div>{userData?.결석}</div>
+      <InfoWrap>
+        <Img src="" alt="캐릭터" />
+        <Name>{userData?.username}</Name>
+        <Resol>{userData?.resolution}</Resol>
+      </InfoWrap>
+      <GripWrap>
+        <Box1>
+          <span>오전(출석)</span>
+          <Cnt>{userData?.오전출석}</Cnt>
+        </Box1>
+        <Box2>
+          <span>오후(출석)</span>
+          <Cnt>{userData?.오후출석}</Cnt>
+        </Box2>
+        <Box3>
+          <span>지각</span>
+          <Cnt>{userData?.지각}</Cnt>
+        </Box3>
+        <Box4>
+          <span>결석</span>
+          <Cnt>{userData?.결석}</Cnt>
+        </Box4>
+      </GripWrap>
       <Navbar />
     </>
   );
 }
+
+const InfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+`;
+
+const Img = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+`;
+
+const Name = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 10px;
+`;
+const Resol = styled.div``;
+
+const GripWrap = styled.div`
+  display: grid;
+  grid-template-areas: "a b" "c d";
+  gap: 5px;
+  padding: 10px;
+`;
+
+const Box1 = styled.div`
+  grid-area: a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+`;
+
+const Box2 = styled.div`
+  grid-area: b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+`;
+
+const Box3 = styled.div`
+  grid-area: c;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+`;
+
+const Box4 = styled.div`
+  grid-area: d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+`;
+
+const Cnt = styled.span`
+  color: #ff4948;
+`;
