@@ -1,5 +1,13 @@
-import React from "react";
+import Navbar from "@/components/Navbar/Navbar";
+import Topbar from "@/components/Topbar/Topbar";
+import MiniCalendar from "@/components/MiniCalendar";
 
 export default function Calendar() {
-  return <div>Calendar</div>;
+  return (
+    <>
+      <Topbar />
+      <MiniCalendar />
+      <Navbar />
+    </>
+  );
 }

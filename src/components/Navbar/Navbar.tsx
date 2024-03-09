@@ -44,6 +44,19 @@ const NavContainer = styled.nav`
   justify-content: space-between;
   align-items: center;
   font-size: 10px;
+  padding: 0 30px 0 30px;
 `;
 
-const NavLinkTag = styled(NavLink)``;
+const NavLinkTag = styled(NavLink)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 0 20px;
+  &.active {
+    color: #ff4948;
+
+    svg {
+      fill: #ff4948;
+    }
+  }
+`;

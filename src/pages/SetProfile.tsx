@@ -27,6 +27,10 @@ export default function SetProfile() {
       email: email,
       username: watchUsername,
       resolution: watchResolution || "각오따위 없음",
+      오전출석: 0,
+      오후출석: 0,
+      지각: 0,
+      결석: 0,
     };
     const collectionRef = collection(db, "users");
     await addDoc(collectionRef, user);

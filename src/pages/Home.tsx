@@ -1,5 +1,3 @@
-import MiniCalendar from "@/components/MiniCalendar";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar/Navbar";
 import Topbar from "@/components/Topbar/Topbar";
@@ -9,7 +7,6 @@ export default function Home() {
   return (
     <>
       <Topbar />
-      <MiniCalendar />
       <h2>출석체크</h2>
       <div>
         <button>오전 Check</button>

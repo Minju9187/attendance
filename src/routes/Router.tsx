@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Splash from "@/pages/Splash";
 import Home from "@/pages/Home";
 import SignIn from "@/pages/SignIn";
@@ -20,9 +20,9 @@ export default function Router() {
         <Route path="/signup/setprofile" element={<SetProfile />} />
         <Route path="/home" element={<Home />} />
         <Route path="/survey/:postId" element={<Survey />} />
-        <Route path="/check/:id" element={<Check />} />
-        <Route path="/calendar/:id" element={<Calendar />} />
-        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/check/:uid" element={<Check />} />
+        <Route path="/calendar/:uid" element={<Calendar />} />
+        <Route path="/profile/:uid" element={<Profile />} />
       </Routes>
     </>
   );
