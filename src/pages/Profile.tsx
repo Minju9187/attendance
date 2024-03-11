@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, where, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, where, getDocs, query } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
@@ -9,6 +9,11 @@ import styled from "styled-components";
 export default function Profile() {
   const { uid } = useParams();
   const [userData, setUserData] = useState({});
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const today = year + "-" + month + "-" + day;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +31,7 @@ export default function Profile() {
           오후출석,
           지각,
           결석,
+          isManager,
         } = doc.data();
         setUserData({
           userId: userId,
@@ -36,12 +42,27 @@ export default function Profile() {
           오후출석: 오후출석,
           지각: 지각,
           결석: 결석,
+          isManager: isManager,
         });
       });
     };
 
     fetchData();
   }, []);
+
+  const addSurvey = async () => {
+    const q1 = query(collection(db, "users"));
+    const querySnapshot = await getDocs(q1);
+    const arr = [];
+    querySnapshot.forEach((doc) => {
+      arr.push({ userId: doc.data().userId, 오전참여: true, 오후참여: true });
+    });
+    const arrJson = JSON.stringify(arr);
+    const data = { date: today, arr: arrJson };
+    const collectionRef = collection(db, "survey");
+    await addDoc(collectionRef, data);
+  };
+
   return (
     <>
       <Topbar />
@@ -68,6 +89,7 @@ export default function Profile() {
           <Cnt>{userData?.결석}</Cnt>
         </Box4>
       </GripWrap>
+      {userData?.isManager ? <button onClick={addSurvey}>추가</button> : <>/</>}
       <Navbar />
     </>
   );

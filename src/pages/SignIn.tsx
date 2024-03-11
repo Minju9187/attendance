@@ -21,8 +21,13 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     try {
-      await signInWithEmailAndPassword(auth, watchEmail, watchPassword);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        watchEmail,
+        watchPassword
+      );
       navigate("/home");
+      window.localStorage.setItem("userId", userCredential.user.uid);
     } catch (error) {
       const { code } = error as FirebaseError;
       switch (code) {

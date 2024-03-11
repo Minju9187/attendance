@@ -31,6 +31,7 @@ export default function SetProfile() {
       오후출석: 0,
       지각: 0,
       결석: 0,
+      isManager: false,
     };
     const collectionRef = collection(db, "users");
     await addDoc(collectionRef, user);

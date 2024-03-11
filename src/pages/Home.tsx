@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar/Navbar";
 import Topbar from "@/components/Topbar/Topbar";
 import styled from "styled-components";
+import { useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ export default function Home() {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const today = year + "-" + month + "-" + day;
+  const userId = localStorage.getItem("userId");
+  console.log(userId);
 
   return (
     <>
