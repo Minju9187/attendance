@@ -11,8 +11,6 @@ export default function Home() {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const today = year + "-" + month + "-" + day;
-  const userId = localStorage.getItem("userId");
-  console.log(userId);
 
   return (
     <>

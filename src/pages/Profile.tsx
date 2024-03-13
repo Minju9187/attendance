@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { addDoc, collection, where, getDocs, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  where,
+  getDocs,
+  query,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
@@ -55,12 +65,26 @@ export default function Profile() {
     const querySnapshot = await getDocs(q1);
     const arr = [];
     querySnapshot.forEach((doc) => {
-      arr.push({ userId: doc.data().userId, 오전참여: true, 오후참여: true });
+      arr.push({
+        userId: doc.data().userId,
+        username: doc.data().username,
+        오전참여: true,
+        오후참여: true,
+      });
     });
-    const arrJson = JSON.stringify(arr);
-    const data = { date: today, arr: arrJson };
-    const collectionRef = collection(db, "survey");
-    await addDoc(collectionRef, data);
+    const data = { arr: JSON.stringify(arr) };
+    try {
+      const collectionRef = doc(db, "survey", today);
+      const docSnapshot = await getDoc(collectionRef);
+      if (docSnapshot.exists()) {
+        await updateDoc(collectionRef, data);
+      } else {
+        // 문서가 없으면 새로운 문서를 생성하여 데이터를 추가합니다.
+        await setDoc(collectionRef, data);
+      }
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   return (
