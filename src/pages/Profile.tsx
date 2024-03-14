@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import {
-  addDoc,
   collection,
   where,
   getDocs,
@@ -19,15 +18,15 @@ import styled from "styled-components";
 export default function Profile() {
   const { uid } = useParams();
   const [userData, setUserData] = useState({});
-  const date = new Date();
+  const dateToday = new Date();
+  const date = new Date(dateToday.setDate(dateToday.getDate() + 1));
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  const today = year + "-" + month + "-" + day;
+  const tomorrow = year + "-" + month + "-" + day;
 
   useEffect(() => {
     const fetchData = async () => {
-      // collection 이름이 todos인 collection의 모든 document를 가져옵니다.
       const q = query(collection(db, "users"), where("userId", "==", uid));
       const querySnapshot = await getDocs(q);
 
@@ -74,7 +73,7 @@ export default function Profile() {
     });
     const data = { arr: JSON.stringify(arr) };
     try {
-      const collectionRef = doc(db, "survey", today);
+      const collectionRef = doc(db, "survey", tomorrow);
       const docSnapshot = await getDoc(collectionRef);
       if (docSnapshot.exists()) {
         await updateDoc(collectionRef, data);
