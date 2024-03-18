@@ -3,7 +3,16 @@ import Navbar from "@/components/Navbar/Navbar";
 import Topbar from "@/components/Topbar/Topbar";
 import styled from "styled-components";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  increment,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -43,23 +52,49 @@ export default function Home() {
   };
 
   const check = (e) => {
+    let state = "";
     if (e.target.name == "오전") {
-      if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5))
-        alert("출석체크되었습니다.");
-      else if ((hours == 9 && minutes > 5) || (hours == 10 && minutes <= 30))
+      if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
+        state = "오전출석";
+        alert("출석하였습니다");
+      } else if (
+        (hours == 9 && minutes > 5) ||
+        (hours == 10 && minutes <= 30)
+      ) {
+        state = "지각";
         alert("지각하였습니다.");
-      else alert("출석체크시간이 아닙니다.");
+      } else if ((hours == 8 && minutes < 55) || hours < 8)
+        alert("출석체크시간이 아닙니다.");
+      else {
+        state = "결석";
+        alert("결석하였습니다.");
+      }
     }
     if (e.target.name == "오후") {
       if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5))
         alert("출석체크되었습니다.");
       else if ((hours == 13 && minutes > 5) || (hours == 14 && minutes <= 30))
         alert("지각하였습니다.");
-      else alert("출석체크시간이 아닙니다.");
+      else if ((hours == 12 && minutes < 55) || hours < 12)
+        alert("출석체크시간이 아닙니다.");
+      else alert("결석하였습니다.");
+    }
+    if (state) {
+      checkData(state); // 변경된 state 값으로 checkData 함수 호출
     }
   };
 
-  console.log(data);
+  const checkData = async (state) => {
+    const q = query(collection(db, "users"), where("userId", "==", user));
+    const querySnapshot = await getDocs(q);
+    for (const doc of querySnapshot.docs) {
+      const userRef = doc.ref;
+      await updateDoc(userRef, {
+        [state]: increment(1),
+      });
+    }
+  };
+
   return (
     <>
       <Topbar />
