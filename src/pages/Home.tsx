@@ -11,6 +11,7 @@ import {
   increment,
   query,
   updateDoc,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
@@ -53,7 +54,8 @@ export default function Home() {
 
   const check = (e) => {
     let state = "";
-    if (e.target.name == "오전") {
+    const time = e.target.name;
+    if (time == "오전") {
       if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
         state = "오전출석";
         alert("출석하였습니다");
@@ -70,17 +72,26 @@ export default function Home() {
         alert("결석하였습니다.");
       }
     }
-    if (e.target.name == "오후") {
-      if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5))
+    if (time == "오후") {
+      if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5)) {
+        state = "오후출석";
         alert("출석체크되었습니다.");
-      else if ((hours == 13 && minutes > 5) || (hours == 14 && minutes <= 30))
+      } else if (
+        (hours == 13 && minutes > 5) ||
+        (hours == 14 && minutes <= 30)
+      ) {
+        state = "지각";
         alert("지각하였습니다.");
-      else if ((hours == 12 && minutes < 55) || hours < 12)
+      } else if ((hours == 12 && minutes < 55) || hours < 12)
         alert("출석체크시간이 아닙니다.");
-      else alert("결석하였습니다.");
+      else {
+        state = "결석";
+        alert("결석하였습니다.");
+      }
     }
     if (state) {
       checkData(state); // 변경된 state 값으로 checkData 함수 호출
+      addMyCheck(today, time, state);
     }
   };
 
@@ -92,6 +103,28 @@ export default function Home() {
       await updateDoc(userRef, {
         [state]: increment(1),
       });
+    }
+  };
+
+  const addMyCheck = async (today, time, state) => {
+    try {
+      const collectionRef = doc(db, "calendar", user);
+      const docSnapshot = await getDoc(collectionRef);
+      if (docSnapshot.exists()) {
+        const existingData = docSnapshot.data();
+        const existingString = existingData[today];
+        const updatedString = existingString + "," + time + ":" + state;
+        if (existingString == undefined) {
+          await updateDoc(collectionRef, { [today]: time + ":" + state });
+        } else {
+          await updateDoc(collectionRef, { [today]: updatedString });
+        }
+      } else {
+        // 문서가 없으면 새로운 문서를 생성하여 데이터를 추가합니다.
+        await setDoc(collectionRef, { [today]: time + ":" + state });
+      }
+    } catch (error) {
+      console.error("Error adding document: ", error);
     }
   };
 
