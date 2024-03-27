@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { auth } from "../firebase";
+import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 
@@ -12,7 +13,6 @@ export default function SignUp() {
     handleSubmit,
     watch,
     getValues,
-    resetField,
     formState: { errors },
   } = useForm();
 
@@ -21,39 +21,25 @@ export default function SignUp() {
   const watchPassword = watch("password");
   const watchPasswordCheck = watch("passwordCheck");
 
-  const onSubmit = async (data) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        watchEmail,
-        watchPassword
-      );
+  const duplicatedEmail = async () => {
+    const q = query(collection(db, "users"), where("email", "==", watchEmail));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      alert("이미 있는 이메일입니다.");
+    } else {
       navigate("/signup/setprofile", {
         state: {
-          userId: userCredential.user.uid,
+          // userId: userCredential.user.uid,
           email: watchEmail,
           password: watchPassword,
         },
       });
-    } catch (error) {
-      const { code } = error as FirebaseError;
-      switch (code) {
-        case "auth/email-already-in-use":
-          alert("이미 사용중인 이메일 입니다.");
-          resetField("email");
-          resetField("password");
-          resetField("passwordCheck");
-          break;
-        case "auth/network-request-failed":
-          alert("네트워크 연결에 실패하였습니다.");
-          break;
-        case "auth/internal-error":
-          alert("잘못된 요청입니다.");
-          break;
-        default:
-          alert("회원가입에 실패하였습니다.");
-      }
     }
+  };
+
+  const onSubmit = (data) => {
+    duplicatedEmail();
   };
 
   return (

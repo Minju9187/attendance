@@ -20,16 +20,16 @@ export default function Home() {
   const navigate = useNavigate();
   const dateToday = new Date();
   const yearToday = dateToday.getFullYear();
-  const monthToday = dateToday.getMonth() + 1;
-  const dayToday = dateToday.getDate();
+  const monthToday = String(dateToday.getMonth() + 1).padStart(2, "0");
+  const dayToday = String(dateToday.getDate()).padStart(2, "0");
   const today = yearToday + "-" + monthToday + "-" + dayToday;
   const hours = dateToday.getHours();
   const minutes = dateToday.getMinutes();
 
   const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
   const yearTomo = dateTomo.getFullYear();
-  const monthTomo = dateTomo.getMonth() + 1;
-  const dayTomo = dateTomo.getDate();
+  const monthTomo = String(dateTomo.getMonth() + 1).padStart(2, "0");
+  const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
   const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
 
   const [data, setData] = useState([]);

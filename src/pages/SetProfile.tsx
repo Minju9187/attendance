@@ -2,8 +2,10 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 export default function SetProfile() {
   const {
@@ -15,27 +17,49 @@ export default function SetProfile() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = location.state.userId;
   const email = location.state.email;
   const password = location.state.password;
   const watchUsername = watch("username");
   const watchResolution = watch("resolution");
 
   const onSubmit = async () => {
-    const user = {
-      userId: userId,
-      email: email,
-      username: watchUsername,
-      resolution: watchResolution || "각오따위 없음",
-      오전출석: 0,
-      오후출석: 0,
-      지각: 0,
-      결석: 0,
-      isManager: false,
-    };
-    const collectionRef = collection(db, "users");
-    await addDoc(collectionRef, user);
-    navigate("/signin");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = {
+        userId: userCredential.user.uid,
+        email: email,
+        username: watchUsername,
+        resolution: watchResolution || "각오따위 없음",
+        오전출석: 0,
+        오후출석: 0,
+        지각: 0,
+        결석: 0,
+        isManager: false,
+      };
+      const collectionRef = collection(db, "users");
+      await addDoc(collectionRef, user);
+      navigate("/signin");
+    } catch (error) {
+      const { code } = error as FirebaseError;
+      switch (code) {
+        case "auth/email-already-in-use":
+          alert("이미 사용중인 이메일 입니다.");
+          break;
+        case "auth/network-request-failed":
+          alert("네트워크 연결에 실패하였습니다.");
+          break;
+        case "auth/internal-error":
+          alert("잘못된 요청입니다.");
+          break;
+        default:
+          alert("회원가입에 실패하였습니다.");
+      }
+    }
   };
 
   return (
