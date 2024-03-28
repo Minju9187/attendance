@@ -45,6 +45,8 @@ const NavContainer = styled.nav`
   align-items: center;
   font-size: 10px;
   padding: 0 30px 0 30px;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 14%) 0px 0px 7px;
 `;
 
 const NavLinkTag = styled(NavLink)`

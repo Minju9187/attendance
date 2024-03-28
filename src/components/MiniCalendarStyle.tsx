@@ -119,7 +119,7 @@ export const StyledToday = styled.div`
   color: ${(props) => props.theme.br_2};
   font-weight: 600;
   position: absolute;
-  top: 50%;
+  top: 65%;
   left: 50%;
   transform: translateX(-50%);
 `;

@@ -15,6 +15,8 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import checkImg from "@/assets/images/check-img.png";
+import FlipButton from "@/components/FlipButton";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -35,6 +37,13 @@ export default function Home() {
   const [data, setData] = useState([]);
   const user = localStorage.getItem("userId");
 
+  const [isMorningChecked, setIsMorningChecked] = useState(
+    localStorage.getItem(today + "Morning") === "true"
+  );
+  const [isAfternoonChecked, setIsAfternoonChecked] = useState(
+    localStorage.getItem(today + "Afternoon") === "true"
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       const collectionRef = doc(db, "survey", today);
@@ -52,41 +61,53 @@ export default function Home() {
     return false;
   };
 
-  const check = (e) => {
+  const handleCheck = (e) => {
     let state = "";
     const time = e.target.name;
     if (time == "오전") {
       if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
         state = "오전출석";
         alert("출석하였습니다");
+        setIsMorningChecked(true);
+        localStorage.setItem(today + "Morning", "true");
       } else if (
         (hours == 9 && minutes > 5) ||
         (hours == 10 && minutes <= 30)
       ) {
         state = "지각";
         alert("지각하였습니다.");
+        localStorage.setItem(today + "Morning", "true");
+        setIsMorningChecked(true);
       } else if ((hours == 8 && minutes < 55) || hours < 8)
         alert("출석체크시간이 아닙니다.");
       else {
         state = "결석";
         alert("결석하였습니다.");
+        localStorage.setItem(today + "Morning", "true");
+        setIsMorningChecked(true);
       }
     }
     if (time == "오후") {
       if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5)) {
         state = "오후출석";
         alert("출석체크되었습니다.");
+        localStorage.setItem(today + "Afternoon", "true");
+        setIsAfternoonChecked(true);
       } else if (
         (hours == 13 && minutes > 5) ||
         (hours == 14 && minutes <= 30)
       ) {
         state = "지각";
         alert("지각하였습니다.");
+        localStorage.setItem(today + "Afternoon", "true");
+        setIsAfternoonChecked(true);
       } else if ((hours == 12 && minutes < 55) || hours < 12)
         alert("출석체크시간이 아닙니다.");
       else {
         state = "결석";
         alert("결석하였습니다.");
+        localStorage.setItem(today + "Afternoon", "true");
+        setIsAfternoonChecked(true);
       }
     }
     if (state) {
@@ -138,8 +159,9 @@ export default function Home() {
           <p>9:00 ~ 12:00</p>
           <CheckButton
             name="오전"
-            disabled={!handleActivateBtn("오전")}
-            onClick={check}
+            disabled={!handleActivateBtn("오전") || isMorningChecked}
+            isChecked={isMorningChecked}
+            onClick={handleCheck}
           >
             Check
           </CheckButton>
@@ -149,8 +171,9 @@ export default function Home() {
           <p>13:00 ~ 16:00</p>
           <CheckButton
             name="오후"
-            disabled={!handleActivateBtn("오후")}
-            onClick={check}
+            disabled={!handleActivateBtn("오후") || isAfternoonChecked}
+            isChecked={isAfternoonChecked}
+            onClick={handleCheck}
           >
             Check
           </CheckButton>
@@ -163,6 +186,7 @@ export default function Home() {
       >
         참석 여부 체크하러 가기
       </button>
+      <FlipButton isChecked={isAfternoonChecked} onClick={handleCheck} />
       <Navbar />
     </>
   );

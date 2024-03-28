@@ -92,7 +92,6 @@ export default function Profile() {
     <>
       <Topbar />
       <InfoWrap>
-        <Img src="" alt="캐릭터" />
         <Name>{userData?.username}</Name>
         <Resol>{userData?.resolution}</Resol>
       </InfoWrap>
@@ -126,13 +125,6 @@ const InfoWrap = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-`;
-
-const Img = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #f5f5f5;
 `;
 
 const Name = styled.div`
