@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import {
   collection,
@@ -59,8 +59,6 @@ export default function Profile() {
     fetchData();
   }, []);
 
-  console.log(tomorrow);
-
   const addSurvey = async () => {
     const q1 = query(collection(db, "users"));
     const querySnapshot = await getDocs(q1);
@@ -113,7 +111,11 @@ export default function Profile() {
           <Cnt>{userData?.결석}</Cnt>
         </Box4>
       </GripWrap>
-      {userData?.isManager ? <button onClick={addSurvey}>추가</button> : <></>}
+      {userData?.isManager ? (
+        <Button onClick={addSurvey}>참석 여부 조사 추가</Button>
+      ) : (
+        <></>
+      )}
       <Navbar />
     </>
   );
@@ -137,8 +139,8 @@ const Resol = styled.div``;
 const GripWrap = styled.div`
   display: grid;
   grid-template-areas: "a b" "c d";
-  gap: 5px;
-  padding: 10px;
+  gap: 6px;
+  padding: 30px;
 `;
 
 const Box1 = styled.div`
@@ -148,7 +150,7 @@ const Box1 = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const Box2 = styled.div`
@@ -158,7 +160,7 @@ const Box2 = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const Box3 = styled.div`
@@ -168,7 +170,7 @@ const Box3 = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const Box4 = styled.div`
@@ -178,9 +180,22 @@ const Box4 = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const Cnt = styled.span`
   color: #ff4948;
+`;
+
+const Button = styled.button`
+  width: 322px;
+  height: 44px;
+  background-color: #ff4948;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  color: white;
+  border-radius: 30px;
+  font-weight: 500px;
+  font-size: 14px;
+  margin: 0 auto;
+  margin-bottom: 10px;
 `;

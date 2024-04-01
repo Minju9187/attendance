@@ -34,8 +34,6 @@ const MiniCalendar = ({ data }) => {
     attendData[date] = formattedData;
   });
 
-  console.log(data);
-
   return (
     <StyledCalendarWrapper>
       <StyledCalendar

@@ -7,6 +7,21 @@ import { auth } from "@/firebase";
 
 export default function Topbar() {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    const confirmed = window.confirm("로그아웃 하시겠습니까?");
+    if (confirmed) {
+      auth
+        .signOut()
+        .then(() => {
+          navigate("/signin");
+        })
+        .catch((error) => {
+          console.error("로그아웃 오류", error);
+        });
+    }
+  };
+
   return (
     <Container>
       <BackBtn
@@ -16,12 +31,7 @@ export default function Topbar() {
       >
         <img src={BackIcon} alt="뒤로가기" />
       </BackBtn>
-      <LogoutBtn
-        onClick={() => {
-          auth.signOut();
-          navigate(`/signin`);
-        }}
-      >
+      <LogoutBtn onClick={handleLogout}>
         <img src={MoreIcon} alt="더보기" />
       </LogoutBtn>
     </Container>
@@ -33,7 +43,6 @@ const Container = styled.div`
   justify-content: space-between;
   width: 390px;
   height: 45px;
-
   background-color: #ff4948;
 `;
 

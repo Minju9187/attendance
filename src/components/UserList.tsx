@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { db } from "../firebase";
 import { getDoc, setDoc, doc, updateDoc } from "firebase/firestore";
+import styled from "styled-components";
 
 export default function UserList({ allData, data, idx }) {
   const { userId, username, 오전참여, 오후참여 } = data;
   const [firstTime, setFirstTime] = useState(오전참여);
   const [secondTime, setSecondTime] = useState(오후참여);
   const user = localStorage.getItem("userId");
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const today = year + "-" + month + "-" + day;
+  const dateToday = new Date();
+  const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
+  const yearTomo = dateTomo.getFullYear();
+  const monthTomo = String(dateTomo.getMonth() + 1).padStart(2, "0");
+  const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
+  const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
 
   const handleActivateBtn = () => {
     return user === userId;
@@ -19,7 +21,7 @@ export default function UserList({ allData, data, idx }) {
 
   const updateSurveyData = async () => {
     try {
-      const collectionRef = doc(db, "survey", today);
+      const collectionRef = doc(db, "survey", tomorrow);
       const docSnapshot = await getDoc(collectionRef);
       if (docSnapshot.exists()) {
         await updateDoc(collectionRef, { arr: JSON.stringify(allData) });
@@ -49,28 +51,49 @@ export default function UserList({ allData, data, idx }) {
 
   return (
     <>
-      <div>{userId}</div>
-      <div>{username}</div>
-      <label htmlFor="오전참여">오전참여</label>
-      <select
-        id="오전참여"
-        name="오전참여"
-        onChange={handleChangeSelect}
-        disabled={!handleActivateBtn()}
-      >
-        <option value="true">참여</option>
-        <option value="false">불참여</option>
-      </select>
-      <label htmlFor="오후참여">오후참여</label>
-      <select
-        id="오후참여"
-        name="오후참여"
-        onChange={handleChangeSelect}
-        disabled={!handleActivateBtn()}
-      >
-        <option value="true">참여</option>
-        <option value="false">불참여</option>
-      </select>
+      <UserInfo>
+        <InfoName>{username}</InfoName>
+        <div>
+          <label htmlFor="오전참여">오전 : </label>
+          <select
+            id="오전참여"
+            name="오전참여"
+            onChange={handleChangeSelect}
+            disabled={!handleActivateBtn()}
+            value={firstTime}
+          >
+            <option value="true">참여</option>
+            <option value="false">불참여</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="오후참여">오후 : </label>
+          <select
+            id="오후참여"
+            name="오후참여"
+            onChange={handleChangeSelect}
+            disabled={!handleActivateBtn()}
+            value={secondTime}
+          >
+            <option value="true">참여</option>
+            <option value="false">불참여</option>
+          </select>
+        </div>
+      </UserInfo>
     </>
   );
 }
+
+const UserInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 156px;
+  height: 120px;
+`;
+
+const InfoName = styled.div`
+  font-size: 20px;
+  margin-bottom: 10px;
+`;

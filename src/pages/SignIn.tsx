@@ -52,8 +52,9 @@ export default function SignIn() {
   return (
     <>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="email">이메일</label>
-        <input
+        <Title>로그인</Title>
+        <Label htmlFor="email">이메일</Label>
+        <Input
           id="email"
           type="text"
           placeholder="이메일을 입력해 주세요"
@@ -66,8 +67,8 @@ export default function SignIn() {
           })}
         />
         {errors.email && <small role="alert">{errors.email.message}</small>}
-        <label htmlFor="password">비밀번호</label>
-        <input
+        <Label htmlFor="password">비밀번호</Label>
+        <Input
           id="password"
           type="password"
           placeholder="비밀번호를 입력해 주세요"
@@ -83,10 +84,10 @@ export default function SignIn() {
         {errors.password && (
           <small role="alert">{errors.password.message}</small>
         )}
-        <button type="submit" disabled={!watchEmail || !watchPassword}>
+        <Button type="submit" disabled={!watchEmail || !watchPassword}>
           로그인
-        </button>
-        <button onClick={() => navigate("/signup")}>회원가입</button>
+        </Button>
+        <Button onClick={() => navigate("/signup")}>회원가입</Button>
       </Form>
     </>
   );
@@ -95,4 +96,34 @@ export default function SignIn() {
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 30px;
+`;
+
+const Title = styled.h1`
+  font-size: 25px;
+  text-align: center;
+  margin-bottom: 50px;
+`;
+
+const Label = styled.label`
+  font-size: 12px;
+  color: #767676;
+  margin-bottom: 6px;
+`;
+
+const Input = styled.input`
+  border-bottom: 1px solid rgb(219, 219, 219);
+  margin-bottom: 16px;
+`;
+
+const Button = styled.button`
+  width: 322px;
+  height: 44px;
+  background-color: #ff4948;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  color: white;
+  border-radius: 30px;
+  font-weight: 500px;
+  font-size: 14px;
+  margin-bottom: 10px;
 `;

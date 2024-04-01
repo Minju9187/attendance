@@ -15,8 +15,6 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import checkImg from "@/assets/images/check-img.png";
-import FlipButton from "@/components/FlipButton";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -155,45 +153,42 @@ export default function Home() {
       <Title>출석체크</Title>
       <Wrap>
         <CheckBox>
-          <span>오전(출석)</span>
+          <Span>오전(출석)</Span>
           <p>9:00 ~ 12:00</p>
           <CheckButton
             name="오전"
             disabled={!handleActivateBtn("오전") || isMorningChecked}
-            isChecked={isMorningChecked}
             onClick={handleCheck}
           >
             Check
           </CheckButton>
         </CheckBox>
         <CheckBox>
-          <span>오후(출석)</span>
+          <Span>오후(출석)</Span>
           <p>13:00 ~ 16:00</p>
           <CheckButton
             name="오후"
             disabled={!handleActivateBtn("오후") || isAfternoonChecked}
-            isChecked={isAfternoonChecked}
             onClick={handleCheck}
           >
             Check
           </CheckButton>
         </CheckBox>
       </Wrap>
-      <button
+      <Button
         onClick={() => {
           navigate(`/survey/${tomorrow}`);
         }}
       >
         참석 여부 체크하러 가기
-      </button>
-      <FlipButton isChecked={isAfternoonChecked} onClick={handleCheck} />
+      </Button>
       <Navbar />
     </>
   );
 }
 
-const Title = styled.h2`
-  font-size: 30px;
+const Title = styled.h1`
+  font-size: 25px;
   text-align: center;
   margin-top: 30px;
 `;
@@ -202,6 +197,7 @@ const Wrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 `;
@@ -213,13 +209,29 @@ const CheckBox = styled.div`
   align-items: center;
 `;
 
+const Span = styled.span`
+  font-size: 14px;
+`;
+
 const CheckButton = styled.button`
-  width: 180px;
-  height: 80px;
+  width: 156px;
+  height: 60px;
   color: white;
   font-size: 25px;
   background-color: #ff4948;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  border-radius: 10px;
+  border-radius: 20px;
   margin-top: 10px;
+`;
+
+const Button = styled.button`
+  width: 322px;
+  height: 44px;
+  background-color: #ff4948;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  color: white;
+  border-radius: 30px;
+  font-weight: 500px;
+  font-size: 14px;
+  margin: 10px auto;
 `;

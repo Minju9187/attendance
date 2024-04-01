@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -66,8 +65,9 @@ export default function SignUp() {
   return (
     <>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="email">이메일</label>
-        <input
+        <Title>회원가입</Title>
+        <Label htmlFor="email">이메일</Label>
+        <Input
           id="email"
           type="text"
           placeholder="이메일을 입력해 주세요"
@@ -80,8 +80,8 @@ export default function SignUp() {
           })}
         />
         {errors.email && <small role="alert">{errors.email.message}</small>}
-        <label htmlFor="password">비밀번호</label>
-        <input
+        <Label htmlFor="password">비밀번호</Label>
+        <Input
           id="password"
           type="password"
           placeholder="비밀번호를 입력해 주세요"
@@ -97,8 +97,8 @@ export default function SignUp() {
         {errors.password && (
           <small role="alert">{errors.password.message}</small>
         )}
-        <label htmlFor="passwordCheck">비밀번호 확인</label>
-        <input
+        <Label htmlFor="passwordCheck">비밀번호 확인</Label>
+        <Input
           id="passwordCheck"
           type="password"
           placeholder="비밀번호를 다시 한번 입력해 주세요"
@@ -110,8 +110,8 @@ export default function SignUp() {
               "비밀번호가 일치하지 않습니다.",
           })}
         />
-        <label htmlFor="username">사용자 이름</label>
-        <input
+        <Label htmlFor="username">사용자 이름</Label>
+        <Input
           id="username"
           type="text"
           placeholder="2~8자 이내여야 합니다."
@@ -126,8 +126,8 @@ export default function SignUp() {
         {errors.username && (
           <small role="alert">{errors.username.message}</small>
         )}
-        <label htmlFor="resolution">각오</label>
-        <input
+        <Label htmlFor="resolution">각오</Label>
+        <Input
           id="resolution"
           type="text"
           placeholder="짧게 각오를 적어주세요"
@@ -136,7 +136,7 @@ export default function SignUp() {
         {errors.resolution && (
           <small role="alert">{errors.resolution.message}</small>
         )}
-        <button
+        <Button
           type="submit"
           disabled={
             !watchEmail ||
@@ -147,7 +147,7 @@ export default function SignUp() {
           }
         >
           다음
-        </button>
+        </Button>
       </Form>
     </>
   );
@@ -156,4 +156,34 @@ export default function SignUp() {
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 30px;
+`;
+
+const Title = styled.h1`
+  font-size: 25px;
+  text-align: center;
+  margin-bottom: 50px;
+`;
+
+const Label = styled.label`
+  font-size: 12px;
+  color: #767676;
+  margin-bottom: 6px;
+`;
+
+const Input = styled.input`
+  border-bottom: 1px solid rgb(219, 219, 219);
+  margin-bottom: 16px;
+`;
+
+const Button = styled.button`
+  width: 322px;
+  height: 44px;
+  background-color: #ff4948;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  color: white;
+  border-radius: 30px;
+  font-weight: 500px;
+  font-size: 14px;
+  margin-bottom: 10px;
 `;

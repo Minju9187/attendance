@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import checkImg from "@/assets/images/check-img.png";
 
-export default function FlipButton({ isChecked, onClick }) {
+export default function FlipButton({ isChecked, onClick, disabled }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -15,16 +15,20 @@ export default function FlipButton({ isChecked, onClick }) {
       <Flipper className={isFlipped ? "flipped" : ""}>
         <Front>
           {isChecked ? (
-            <img src={checkImg} alt="check" />
+            <CheckBox>
+              <CheckImg src={checkImg} alt="check" />
+            </CheckBox>
           ) : (
-            <CheckButton>check</CheckButton>
+            <CheckButton disabled={disabled}>Check</CheckButton>
           )}
         </Front>
         <Back>
           {isChecked ? (
-            <CheckButton>check</CheckButton>
+            <CheckButton disabled={disabled}>Check</CheckButton>
           ) : (
-            <img src={checkImg} alt="check" />
+            <CheckBox>
+              <CheckImg src={checkImg} alt="check" />
+            </CheckBox>
           )}
         </Back>
       </Flipper>
@@ -75,5 +79,18 @@ const CheckButton = styled.button`
   background-color: #ff4948;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   border-radius: 10px;
+  margin-top: 10px;
+`;
+
+const CheckImg = styled.img`
+  width: 100px;
+  height: 80px;
+`;
+
+const CheckBox = styled.div`
+  width: 180px;
+  height: 80px;
+  border-radius: 10px;
+  border: 1px solid black;
   margin-top: 10px;
 `;
