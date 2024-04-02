@@ -64,12 +64,14 @@ export default function Profile() {
     const querySnapshot = await getDocs(q1);
     const arr = [];
     querySnapshot.forEach((doc) => {
-      arr.push({
-        userId: doc.data().userId,
-        username: doc.data().username,
-        오전참여: true,
-        오후참여: true,
-      });
+      if (doc.data().active) {
+        arr.push({
+          userId: doc.data().userId,
+          username: doc.data().username,
+          오전참여: true,
+          오후참여: true,
+        });
+      }
     });
     const data = { arr: JSON.stringify(arr) };
     try {
