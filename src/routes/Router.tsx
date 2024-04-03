@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Splash from "@/pages/Splash";
 import Home from "@/pages/Home";
 import SignIn from "@/pages/SignIn";
@@ -8,9 +8,23 @@ import SignUp from "@/pages/SignUp";
 import Survey from "@/pages/Survey";
 import Profile from "@/pages/Profile";
 import Calendar from "@/pages/Calendar";
+import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn, logOut } from "@/store";
 
 export default function Router() {
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(logIn(user.uid));
+      } else {
+        dispatch(logOut());
+      }
+    });
+  }, []);
 
   return (
     <>
