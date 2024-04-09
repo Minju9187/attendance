@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { logIn } from "@/reducers/store";
 
 export default function SignIn() {
   const {
@@ -16,6 +18,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const watchEmail = watch("email");
   const watchPassword = watch("password");
+  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
     try {
@@ -26,6 +29,7 @@ export default function SignIn() {
       );
       navigate("/home");
       window.localStorage.setItem("userId", userCredential.user.uid);
+      dispatch(logIn(true));
     } catch (error) {
       const { code } = error as FirebaseError;
       switch (code) {

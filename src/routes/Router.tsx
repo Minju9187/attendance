@@ -8,24 +8,9 @@ import SignUp from "@/pages/SignUp";
 import Survey from "@/pages/Survey";
 import Profile from "@/pages/Profile";
 import Calendar from "@/pages/Calendar";
-import { onAuthStateChanged } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { logIn, logOut } from "@/store";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Router() {
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        dispatch(logIn(user.uid));
-      } else {
-        dispatch(logOut());
-      }
-    });
-  }, []);
-
   return (
     <>
       <Routes>
@@ -34,19 +19,35 @@ export default function Router() {
         <Route path="/signup" element={<SignUp />} />
         <Route
           path="/home"
-          element={user ? <Home /> : <Navigate to="/signin" />}
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/survey/:day"
-          element={user ? <Survey /> : <Navigate to="/signin" />}
+          element={
+            <ProtectedRoute>
+              <Survey />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/calendar/:uid"
-          element={user ? <Calendar /> : <Navigate to="/signin" />}
+          element={
+            <ProtectedRoute>
+              <Calendar />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/profile/:uid"
-          element={user ? <Profile /> : <Navigate to="/signin" />}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </>
