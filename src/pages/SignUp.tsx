@@ -50,7 +50,7 @@ export default function SignUp() {
       };
       const collectionRef = collection(db, "users");
       await addDoc(collectionRef, user);
-      navigate("/signin");
+      navigate("/");
     } catch (error) {
       const { code } = error as FirebaseError;
       switch (code) {

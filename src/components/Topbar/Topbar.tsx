@@ -16,7 +16,7 @@ export default function Topbar() {
       auth
         .signOut()
         .then(() => {
-          navigate("/signin");
+          navigate("/");
           dispatch(logOut());
         })
         .catch((error) => {
