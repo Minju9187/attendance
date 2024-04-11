@@ -25,6 +25,7 @@ interface UserData {
   지각: number;
   결석: number;
   isManager: boolean;
+  active: boolean;
 }
 
 interface SurveyData {
@@ -46,6 +47,7 @@ export default function Profile() {
     지각: 0,
     결석: 0,
     isManager: false,
+    active: false,
   });
   const dateToday = new Date();
   const date = new Date(dateToday.setDate(dateToday.getDate() + 1));
@@ -70,6 +72,7 @@ export default function Profile() {
           지각,
           결석,
           isManager,
+          active,
         } = doc.data() as UserData;
         setUserData({
           userId: userId,
@@ -81,6 +84,7 @@ export default function Profile() {
           지각: 지각,
           결석: 결석,
           isManager: isManager,
+          active: active,
         });
       });
     };
@@ -144,6 +148,14 @@ export default function Profile() {
       </GripWrap>
       {userData?.isManager ? (
         <Button onClick={addSurvey}>참석 여부 조사 추가</Button>
+      ) : (
+        <></>
+      )}
+      {!userData?.active ? (
+        <NotAddStudy>
+          아직 관리자가 스터디원으로 추가하지 않았습니다. <br />
+          조금만 기다려주세요~!
+        </NotAddStudy>
       ) : (
         <></>
       )}
@@ -229,4 +241,8 @@ const Button = styled.button`
   font-size: 14px;
   margin: 0 auto;
   margin-bottom: 10px;
+`;
+
+const NotAddStudy = styled.p`
+  text-align: center;
 `;
