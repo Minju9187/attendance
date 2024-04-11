@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { db } from "../../firebase";
 import { getDoc, setDoc, doc, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
 
-export default function UserList({ allData, data, idx }) {
+interface UserData {
+  userId: string;
+  username: string;
+  오전참여: boolean;
+  오후참여: boolean;
+}
+
+interface UserListProps {
+  allData: UserData[];
+  data: UserData;
+  idx: number;
+}
+
+export default function UserList({ allData, data, idx }: UserListProps) {
   const { userId, username, 오전참여, 오후참여 } = data;
-  const [firstTime, setFirstTime] = useState(오전참여);
-  const [secondTime, setSecondTime] = useState(오후참여);
+  const [firstTime, setFirstTime] = useState<boolean>(오전참여);
+  const [secondTime, setSecondTime] = useState<boolean>(오후참여);
   const user = localStorage.getItem("userId");
   const dateToday = new Date();
   const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
@@ -15,11 +28,11 @@ export default function UserList({ allData, data, idx }) {
   const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
   const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
 
-  const handleActivateBtn = () => {
+  const handleActivateBtn = (): boolean => {
     return user === userId;
   };
 
-  const updateSurveyData = async () => {
+  const updateSurveyData = async (): Promise<void> => {
     try {
       const collectionRef = doc(db, "survey", tomorrow);
       const docSnapshot = await getDoc(collectionRef);
@@ -34,17 +47,17 @@ export default function UserList({ allData, data, idx }) {
     }
   };
 
-  const handleChangeSelect = (event) => {
+  const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>): void => {
     const {
       target: { name, value },
     } = event;
     if (name === "오전참여") {
-      setFirstTime(value);
-      allData[idx].오전참여 = value;
+      setFirstTime(value === "true");
+      allData[idx].오전참여 = value === "true";
     }
     if (name === "오후참여") {
-      setSecondTime(value);
-      allData[idx].오후참여 = value;
+      setSecondTime(value === "true");
+      allData[idx].오후참여 = value === "true";
     }
     updateSurveyData();
   };
@@ -60,7 +73,7 @@ export default function UserList({ allData, data, idx }) {
             name="오전참여"
             onChange={handleChangeSelect}
             disabled={!handleActivateBtn()}
-            value={firstTime}
+            value={String(firstTime)}
           >
             <option value="true">참여</option>
             <option value="false">불참여</option>
@@ -73,7 +86,7 @@ export default function UserList({ allData, data, idx }) {
             name="오후참여"
             onChange={handleChangeSelect}
             disabled={!handleActivateBtn()}
-            value={secondTime}
+            value={String(secondTime)}
           >
             <option value="true">참여</option>
             <option value="false">불참여</option>

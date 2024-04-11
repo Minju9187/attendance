@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import HomeIcon from "@/assets/images/icon-home.svg?react";
@@ -8,7 +8,7 @@ import ProfileIcon from "@/assets/images/icon-profile.svg?react";
 
 export default function Navbar() {
   const auth = getAuth();
-  let [data, setData] = useState();
+  const [data, setData] = useState<User | null>(null);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {

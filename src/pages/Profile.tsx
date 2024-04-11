@@ -15,9 +15,31 @@ import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
 import styled from "styled-components";
 
+interface UserData {
+  userId: string;
+  email: string;
+  username: string;
+  resolution: string;
+  오전출석: number;
+  오후출석: number;
+  지각: number;
+  결석: number;
+  isManager: boolean;
+}
+
 export default function Profile() {
-  const { uid } = useParams();
-  const [userData, setUserData] = useState({});
+  const { uid }: { uid?: string } = useParams();
+  const [userData, setUserData] = useState<UserData>({
+    userId: "",
+    email: "",
+    username: "",
+    resolution: "",
+    오전출석: 0,
+    오후출석: 0,
+    지각: 0,
+    결석: 0,
+    isManager: false,
+  });
   const dateToday = new Date();
   const date = new Date(dateToday.setDate(dateToday.getDate() + 1));
   const year = date.getFullYear();
@@ -41,7 +63,7 @@ export default function Profile() {
           지각,
           결석,
           isManager,
-        } = doc.data();
+        } = doc.data() as UserData;
         setUserData({
           userId: userId,
           email: email,

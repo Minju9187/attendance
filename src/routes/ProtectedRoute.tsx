@@ -1,11 +1,20 @@
+import { RootState } from "@/reducers/store";
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
-export default function ProtectedRoute({ children }) {
-  const user = useSelector((state) => state.user);
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const loggedIn = useSelector((state: RootState) => state.user.loggedIn);
   const location = useLocation();
-  if (!user) {
+
+  if (!loggedIn) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
+
   return <>{children}</>;
-}
+};
+
+export default ProtectedRoute;
