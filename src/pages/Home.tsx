@@ -16,6 +16,13 @@ import {
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 
+interface UserData {
+  userId: string;
+  username: string;
+  오전참여: boolean;
+  오후참여: boolean;
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const dateToday = new Date();
@@ -32,7 +39,7 @@ export default function Home() {
   const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
   const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<UserData | null>(null);
   const user = localStorage.getItem("userId");
 
   const [isMorningChecked, setIsMorningChecked] = useState(
@@ -46,15 +53,19 @@ export default function Home() {
     const fetchData = async () => {
       const collectionRef = doc(db, "survey", today);
       const docSnapshot = await getDoc(collectionRef);
-      JSON.parse(docSnapshot.data().arr).forEach((v, i) => {
-        if (user === v.userId) setData(v);
-      });
+      if (docSnapshot.exists()) {
+        JSON.parse(docSnapshot.data().arr).forEach((v: UserData) => {
+          if (user === v.userId) setData(v);
+        });
+      } else {
+        console.error("문서가 존재하지 않습니다.");
+      }
     };
     fetchData();
   }, []);
 
   const handleActivateBtn = (time: "오전" | "오후") => {
-    if (data && data[time + "참여"]) return true;
+    if (data && (time === "오전" ? data.오전참여 : data.오후참여)) return true;
     return false;
   };
 
@@ -129,6 +140,7 @@ export default function Home() {
     state: string
   ): Promise<void> => {
     try {
+      if (!user) return;
       const collectionRef = doc(db, "calendar", user);
       const docSnapshot = await getDoc(collectionRef);
       if (docSnapshot.exists()) {

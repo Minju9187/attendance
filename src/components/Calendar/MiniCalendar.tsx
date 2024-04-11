@@ -18,6 +18,7 @@ interface AttendanceData {
 interface Props {
   data: AttendanceData;
 }
+
 const MiniCalendar = ({ data }: Props) => {
   const today = new Date();
   const [date, setDate] = useState<Value>(today);
@@ -41,14 +42,21 @@ const MiniCalendar = ({ data }: Props) => {
     attendData[date] = formattedData;
   });
 
+  const getDotStyle = (status: "출석" | "지각" | "결석") => {
+    if (status === "출석") return { backgroundColor: "#008000" };
+    if (status === "지각") return { backgroundColor: "#FFD700" };
+    if (status === "결석") return { backgroundColor: "#FF0000" };
+    return {}; // 기본 색상
+  };
+
   return (
     <StyledCalendarWrapper>
       <StyledCalendar
         value={date}
         onChange={handleDateChange}
-        formatDay={(locale, date) => moment(date).format("D")}
-        formatYear={(locale, date) => moment(date).format("YYYY")}
-        formatMonthYear={(locale, date) => moment(date).format("YYYY. MM")}
+        formatDay={(_, date) => moment(date).format("D")}
+        formatYear={(_, date) => moment(date).format("YYYY")}
+        formatMonthYear={(_, date) => moment(date).format("YYYY. MM")}
         calendarType="gregory"
         showNeighboringMonth={false}
         next2Label={null}
@@ -61,7 +69,7 @@ const MiniCalendar = ({ data }: Props) => {
         }
         // 오늘 날짜에 '오늘' 텍스트 삽입하고 출석한 날짜에 점 표시를 위한 설정
         tileContent={({ date, view }) => {
-          let html = [];
+          const html = [];
           const formattedDate = moment(date).format("YYYY-MM-DD");
           const attendance = attendData[formattedDate];
           if (
@@ -75,13 +83,13 @@ const MiniCalendar = ({ data }: Props) => {
             html.push(
               <StyledMorningDot
                 key={moment(date).format("YYYY-MM-DD" + "오전")}
-                $status={attendance["오전"]}
+                style={getDotStyle(attendance.오전 as "출석" | "지각" | "결석")}
               />
             );
             html.push(
               <StyledAfternoonDot
                 key={moment(date).format("YYYY-MM-DD" + "오후")}
-                $status={attendance["오후"]}
+                style={getDotStyle(attendance.오후 as "출석" | "지각" | "결석")}
               />
             );
           }

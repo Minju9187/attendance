@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function BasicLayout({ children }) {
+interface BasicLayoutProps {
+  children: React.ReactNode;
+}
+
+const BasicLayout: React.FC<BasicLayoutProps> = ({ children }) => {
   return (
     <>
       <ParentContainer>
@@ -11,7 +15,9 @@ export default function BasicLayout({ children }) {
       </ParentContainer>
     </>
   );
-}
+};
+
+export default BasicLayout;
 
 const ParentContainer = styled.div`
   display: flex;
