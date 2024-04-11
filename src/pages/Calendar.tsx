@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar/Navbar";
 import Topbar from "@/components/Topbar/Topbar";
-import MiniCalendar from "@/components/MiniCalendar";
+import MiniCalendar from "@/components/Calendar/MiniCalendar";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";

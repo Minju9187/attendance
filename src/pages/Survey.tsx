@@ -3,7 +3,7 @@ import Topbar from "@/components/Topbar/Topbar";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
-import UserList from "@/components/UserList";
+import UserList from "@/components/User/UserList";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
