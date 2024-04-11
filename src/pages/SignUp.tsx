@@ -47,6 +47,7 @@ export default function SignUp() {
         지각: 0,
         결석: 0,
         isManager: false,
+        active: false,
       };
       const collectionRef = collection(db, "users");
       await addDoc(collectionRef, user);
