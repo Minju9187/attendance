@@ -27,6 +27,13 @@ interface UserData {
   isManager: boolean;
 }
 
+interface SurveyData {
+  userId: string;
+  username: string;
+  오전참여: boolean;
+  오후참여: boolean;
+}
+
 export default function Profile() {
   const { uid }: { uid?: string } = useParams();
   const [userData, setUserData] = useState<UserData>({
@@ -84,7 +91,7 @@ export default function Profile() {
   const addSurvey = async () => {
     const q1 = query(collection(db, "users"));
     const querySnapshot = await getDocs(q1);
-    const arr = [];
+    const arr: SurveyData[] = [];
     querySnapshot.forEach((doc) => {
       if (doc.data().active) {
         arr.push({

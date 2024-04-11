@@ -126,12 +126,6 @@ export const StyledToday = styled.div`
 
 /* 출석한 날짜에 점 표시 스타일 */
 export const StyledMorningDot = styled.div`
-  ${({ $status }) => {
-    if ($status === "출석") return "background-color: #008000;";
-    if ($status === "지각") return "background-color: #FFD700;";
-    if ($status === "결석") return "background-color: #FF0000;";
-    return ""; // 기본 색상
-  }}
   border-radius: 50%;
   width: 0.3rem;
   height: 0.3rem;
@@ -142,12 +136,6 @@ export const StyledMorningDot = styled.div`
 `;
 
 export const StyledAfternoonDot = styled.div`
-  ${({ $status }) => {
-    if ($status === "출석") return "background-color: #008000;";
-    if ($status === "지각") return "background-color: #FFD700;";
-    if ($status === "결석") return "background-color: #FF0000;";
-    return ""; // 기본 색상
-  }}
   border-radius: 50%;
   width: 0.3rem;
   height: 0.3rem;

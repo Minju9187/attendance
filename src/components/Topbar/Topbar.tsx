@@ -1,5 +1,5 @@
-import BackIcon from "@/assets/images/icon-back.svg";
-import MoreIcon from "@/assets/images/icon-dot.svg";
+import BackIcon from "@/assets/images/icon-back.svg?react";
+import MoreIcon from "@/assets/images/icon-dot.svg?react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "@/firebase";
@@ -19,7 +19,7 @@ export default function Topbar() {
           navigate("/signin");
           dispatch(logOut());
         })
-        .catch((error: any) => {
+        .catch((error) => {
           console.error("로그아웃 오류", error);
         });
     }
@@ -32,10 +32,12 @@ export default function Topbar() {
           navigate(-1);
         }}
       >
-        <img src={BackIcon} alt="뒤로가기" />
+        {/* <img src={BackIcon} alt="뒤로가기" /> */}
+        <BackIcon />
       </BackBtn>
       <LogoutBtn onClick={handleLogout}>
-        <img src={MoreIcon} alt="더보기" />
+        {/* <img src={MoreIcon} alt="더보기" /> */}
+        <MoreIcon />
       </LogoutBtn>
     </Container>
   );
