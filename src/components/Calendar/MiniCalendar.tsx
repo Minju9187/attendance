@@ -11,7 +11,14 @@ import { useState } from "react";
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const MiniCalendar = ({ data }) => {
+interface AttendanceData {
+  [date: string]: string;
+}
+
+interface Props {
+  data: AttendanceData;
+}
+const MiniCalendar = ({ data }: Props) => {
   const today = new Date();
   const [date, setDate] = useState<Value>(today);
   const [activeStartDate, setActiveStartDate] = useState<Date | null>(
@@ -22,11 +29,11 @@ const MiniCalendar = ({ data }) => {
     setDate(newDate);
   };
 
-  const attendData = {};
+  const attendData: Record<string, Record<string, string>> = {};
   Object.keys(data).forEach((dateString) => {
     const date = moment(dateString).format("YYYY-MM-DD");
     const parts = data[dateString].split(",");
-    const formattedData = {};
+    const formattedData: Record<string, string> = {};
     parts.forEach((part) => {
       const [time, status] = part.split(":");
       formattedData[time] = status;

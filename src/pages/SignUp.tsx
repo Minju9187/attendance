@@ -6,6 +6,14 @@ import { collection, addDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 
+interface SignUpData {
+  email: string;
+  password: string;
+  passwordCheck: string;
+  username: string;
+  resolution?: string;
+}
+
 export default function SignUp() {
   const {
     register,
@@ -13,28 +21,27 @@ export default function SignUp() {
     watch,
     getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignUpData>();
 
   const navigate = useNavigate();
   const watchEmail = watch("email");
   const watchPassword = watch("password");
   const watchPasswordCheck = watch("passwordCheck");
   const watchUsername = watch("username");
-  const watchResolution = watch("resolution");
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: SignUpData) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        watchEmail,
-        watchPassword
+        data.email,
+        data.password
       );
 
       const user = {
         userId: userCredential.user.uid,
-        email: watchEmail,
-        username: watchUsername,
-        resolution: watchResolution || "각오따위 없음",
+        email: data.email,
+        username: data.username,
+        resolution: data.resolution || "각오따위 없음",
         오전출석: 0,
         오후출석: 0,
         지각: 0,

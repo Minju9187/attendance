@@ -7,32 +7,34 @@ import UserList from "@/components/User/UserList";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function Survey() {
-  const date = useParams();
-  const [data, setData] = useState([]);
+interface UserData {
+  userId: string;
+  username: string;
+  오전참여: boolean;
+  오후참여: boolean;
+}
 
-  const dateToday = new Date();
-  const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
-  const yearTomo = dateTomo.getFullYear();
-  const monthTomo = String(dateTomo.getMonth() + 1).padStart(2, "0");
-  const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
-  const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
+export default function Survey() {
+  const { day }: { day?: string } = useParams();
+  const [data, setData] = useState<UserData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const collectionRef = doc(db, "survey", date.day);
+      if (!day) return;
+      const collectionRef = doc(db, "survey", day);
       const docSnapshot = await getDoc(collectionRef);
-      setData(JSON.parse(docSnapshot.data().arr));
+      if (docSnapshot.exists()) {
+        const arr: UserData[] = JSON.parse(docSnapshot.data().arr);
+        setData(arr);
+      }
     };
     fetchData();
   }, []);
 
-  console.log(data);
-
   return (
     <>
       <Topbar />
-      <SurveyDate>{tomorrow}</SurveyDate>
+      <SurveyDate>{day}</SurveyDate>
       <Title>참여 여부 조사</Title>
       <Wrap>
         {data.length !== 0 ? (

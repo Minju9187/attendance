@@ -1,39 +1,55 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { combineReducers, configureStore, createSlice } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  Persistor,
+  PersistConfig,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
+interface UserState {
+  loggedIn: boolean;
+}
+
+const initialState: UserState = {
+  loggedIn: false,
+};
 
 const user = createSlice({
   name: "user",
-  initialState: false,
+  initialState,
   reducers: {
     logIn(state, action) {
-      return action.payload;
+      state.loggedIn = action.payload;
     },
-    logOut() {
-      return false;
+    logOut(state) {
+      state.loggedIn = false;
     },
   },
 });
 
 export const { logIn, logOut } = user.actions;
 
-const persistConfig = {
+const persistConfig: PersistConfig<UserState> = {
   key: "root",
   storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, user.reducer);
 
-const store = configureStore({
-  reducer: {
-    user: persistedReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
-  // 기본 값이 true지만 배포할때 코드를 숨기기 위해서 false로 변환하기 쉽게 설정에 넣어놨다.
-  devTools: true,
+const rootReducer = combineReducers({
+  user: persistedReducer,
 });
 
-export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof rootReducer>;
+
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
+  devTools: process.env.NODE_ENV !== "production",
+});
+
+export const persistor: Persistor = persistStore(store);
 
 export default store;

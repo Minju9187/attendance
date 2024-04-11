@@ -1,22 +1,25 @@
-import React from "react";
 import BackIcon from "@/assets/images/icon-back.svg";
 import MoreIcon from "@/assets/images/icon-dot.svg";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "@/firebase";
+import { useDispatch } from "react-redux";
+import { logOut } from "@/reducers/store";
 
 export default function Topbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    const confirmed = window.confirm("로그아웃 하시겠습니까?");
+  const handleLogout = (): void => {
+    const confirmed: boolean = window.confirm("로그아웃 하시겠습니까?");
     if (confirmed) {
       auth
         .signOut()
         .then(() => {
           navigate("/signin");
+          dispatch(logOut());
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error("로그아웃 오류", error);
         });
     }

@@ -53,15 +53,13 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const handleActivateBtn = (time) => {
-    if (time === "오전" && data?.오전참여 === true) return true;
-    if (time === "오후" && data?.오후참여 === true) return true;
+  const handleActivateBtn = (time: "오전" | "오후") => {
+    if (data && data[time + "참여"]) return true;
     return false;
   };
 
-  const handleCheck = (e) => {
+  const handleCheck = (time: "오전" | "오후") => {
     let state = "";
-    const time = e.target.name;
     if (time == "오전") {
       if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
         state = "오전출석";
@@ -87,7 +85,7 @@ export default function Home() {
     }
     if (time == "오후") {
       if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5)) {
-        state = "오후출석";
+        state = "출석";
         alert("출석체크되었습니다.");
         localStorage.setItem(today + "Afternoon", "true");
         setIsAfternoonChecked(true);
@@ -114,7 +112,7 @@ export default function Home() {
     }
   };
 
-  const checkData = async (state) => {
+  const checkData = async (state: string): Promise<void> => {
     const q = query(collection(db, "users"), where("userId", "==", user));
     const querySnapshot = await getDocs(q);
     for (const doc of querySnapshot.docs) {
@@ -125,7 +123,11 @@ export default function Home() {
     }
   };
 
-  const addMyCheck = async (today, time, state) => {
+  const addMyCheck = async (
+    today: string,
+    time: string,
+    state: string
+  ): Promise<void> => {
     try {
       const collectionRef = doc(db, "calendar", user);
       const docSnapshot = await getDoc(collectionRef);
@@ -158,7 +160,7 @@ export default function Home() {
           <CheckButton
             name="오전"
             disabled={!handleActivateBtn("오전") || isMorningChecked}
-            onClick={handleCheck}
+            onClick={() => handleCheck("오전")}
           >
             Check
           </CheckButton>
@@ -169,7 +171,7 @@ export default function Home() {
           <CheckButton
             name="오후"
             disabled={!handleActivateBtn("오후") || isAfternoonChecked}
-            onClick={handleCheck}
+            onClick={() => handleCheck("오후")}
           >
             Check
           </CheckButton>

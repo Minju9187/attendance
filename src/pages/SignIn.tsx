@@ -7,25 +7,30 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { logIn } from "@/reducers/store";
 
+interface SignInData {
+  email: string;
+  password: string;
+}
+
 export default function SignIn() {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignInData>();
 
   const navigate = useNavigate();
   const watchEmail = watch("email");
   const watchPassword = watch("password");
   const dispatch = useDispatch();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: SignInData) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        watchEmail,
-        watchPassword
+        data.email,
+        data.password
       );
       navigate("/home");
       window.localStorage.setItem("userId", userCredential.user.uid);
