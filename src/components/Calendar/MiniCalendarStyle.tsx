@@ -18,7 +18,7 @@ export const StyledCalendarWrapper = styled.div`
   /* 전체 폰트 컬러 */
   .react-calendar__month-view {
     abbr {
-      color: ${(props) => props.theme.gray_1};
+      color: black;
     }
   }
 
@@ -146,9 +146,9 @@ export const StyledAfternoonDot = styled.div`
 `;
 
 export const Info = styled.div`
-  position: absolute;
-  top: 9%;
-  left: 88%;
+  position: relative;
+  bottom: 305px;
+  left: 345px;
   transform: translate(-50%);
   width: 40px;
 `;
