@@ -97,7 +97,7 @@ export default function Profile() {
           userId: doc.data().userId,
           username: doc.data().username,
           오전참여: true,
-          오후참여: true,
+          오후참여: false,
         });
       }
     });
