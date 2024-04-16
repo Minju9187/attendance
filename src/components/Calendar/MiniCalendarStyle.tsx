@@ -18,7 +18,7 @@ export const StyledCalendarWrapper = styled.div`
   /* 전체 폰트 컬러 */
   .react-calendar__month-view {
     abbr {
-      color: ${(props) => props.theme.gray_1};
+      color: black;
     }
   }
 
@@ -115,7 +115,7 @@ export const StyledCalendar = styled(Calendar)``;
 
 /* 오늘 날짜에 텍스트 삽입 스타일 */
 export const StyledToday = styled.div`
-  font-size: x-small;
+  font-size: 10px;
   color: ${(props) => props.theme.br_2};
   font-weight: 600;
   position: absolute;
@@ -143,4 +143,44 @@ export const StyledAfternoonDot = styled.div`
   top: 60%;
   left: 58%;
   transform: translateX(-50%);
+`;
+
+export const Info = styled.div`
+  position: absolute;
+  top: 58px;
+  left: 345px;
+  transform: translate(-50%);
+  width: 40px;
+`;
+
+export const Wrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const GreenDot = styled.div`
+  border-radius: 50%;
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: #008000;
+`;
+
+export const YellowDot = styled.div`
+  border-radius: 50%;
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: #ffd700;
+`;
+
+export const RedDot = styled.div`
+  border-radius: 50%;
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: #ff0000;
+`;
+
+export const Status = styled.p`
+  margin-left: 3px;
+  font-size: 10px;
 `;
