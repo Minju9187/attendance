@@ -146,8 +146,8 @@ export const StyledAfternoonDot = styled.div`
 `;
 
 export const Info = styled.div`
-  position: relative;
-  bottom: 305px;
+  position: absolute;
+  top: 58px;
   left: 345px;
   transform: translate(-50%);
   width: 40px;
