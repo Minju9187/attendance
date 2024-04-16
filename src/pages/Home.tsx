@@ -15,6 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import { today, tomorrow } from "@/components/Common/date";
 
 interface UserData {
   userId: string;
@@ -26,18 +27,8 @@ interface UserData {
 export default function Home() {
   const navigate = useNavigate();
   const dateToday = new Date();
-  const yearToday = dateToday.getFullYear();
-  const monthToday = String(dateToday.getMonth() + 1).padStart(2, "0");
-  const dayToday = String(dateToday.getDate()).padStart(2, "0");
-  const today = yearToday + "-" + monthToday + "-" + dayToday;
   const hours = dateToday.getHours();
   const minutes = dateToday.getMinutes();
-
-  const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
-  const yearTomo = dateTomo.getFullYear();
-  const monthTomo = String(dateTomo.getMonth() + 1).padStart(2, "0");
-  const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
-  const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
 
   const [data, setData] = useState<UserData | null>(null);
   const user = localStorage.getItem("userId");

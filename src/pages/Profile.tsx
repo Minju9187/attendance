@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
 import styled from "styled-components";
+import { tomorrow } from "@/components/Common/date";
 
 interface UserData {
   userId: string;
@@ -49,12 +50,6 @@ export default function Profile() {
     isManager: false,
     active: false,
   });
-  const dateToday = new Date();
-  const date = new Date(dateToday.setDate(dateToday.getDate() + 1));
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const tomorrow = year + "-" + month + "-" + day;
 
   useEffect(() => {
     const fetchData = async () => {
