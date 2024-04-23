@@ -64,7 +64,7 @@ export default function Home() {
     let state = "";
     if (time == "오전") {
       if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
-        state = "오전출석";
+        state = "출석";
         alert("출석하였습니다");
         setIsMorningChecked(true);
         localStorage.setItem(today + "Morning", "true");
