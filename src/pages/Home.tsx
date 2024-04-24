@@ -109,19 +109,30 @@ export default function Home() {
       }
     }
     if (state) {
-      checkData(state); // 변경된 state 값으로 checkData 함수 호출
+      checkData(time, state); // 변경된 state 값으로 checkData 함수 호출
       addMyCheck(today, time, state);
     }
   };
 
-  const checkData = async (state: string): Promise<void> => {
+  const checkData = async (time: string, state: string): Promise<void> => {
     const q = query(collection(db, "users"), where("userId", "==", user));
     const querySnapshot = await getDocs(q);
     for (const doc of querySnapshot.docs) {
       const userRef = doc.ref;
-      await updateDoc(userRef, {
-        [state]: increment(1),
-      });
+      if (state === "출석") {
+        await updateDoc(userRef, {
+          [time + state]: increment(1),
+        });
+      } else if (state === "지각") {
+        await updateDoc(userRef, {
+          [state]: increment(1),
+          [time + "출석"]: increment(1),
+        });
+      } else if (state === "결석") {
+        await updateDoc(userRef, {
+          [state]: increment(1),
+        });
+      }
     }
   };
 
