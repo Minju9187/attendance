@@ -38,12 +38,6 @@ export const StyledCalendarWrapper = styled.div`
     background-color: white;
   }
 
-  /* 네비게이션 비활성화 됐을때 스타일 */
-  .react-calendar__navigation button:disabled {
-    background-color: white;
-    color: ${(props) => props.theme.darkBlack};
-  }
-
   /* 년/월 상단 네비게이션 칸 크기 줄이기 */
   .react-calendar__navigation__label {
     flex-grow: 0 !important;
@@ -55,29 +49,30 @@ export const StyledCalendarWrapper = styled.div`
     font-weight: 800;
   }
 
-  /* 일요일에만 빨간 폰트 */
+  /* 토요일,일요일에만 빨간 폰트 */
+  .react-calendar__month-view__weekdays__weekday--weekend abbr[title="토요일"],
   .react-calendar__month-view__weekdays__weekday--weekend abbr[title="일요일"] {
-    color: ${(props) => props.theme.red_1};
+    color: red;
   }
 
-  /* 오늘 날짜 폰트 컬러 */
+  /* 오늘 날짜 컬러 */
   .react-calendar__tile--now {
-    background: none;
+    background: #ff4948;
+    border-radius: 5px;
     abbr {
-      color: ${(props) => props.theme.primary_2};
+      color: white;
     }
   }
 
   /* 네비게이션 월 스타일 적용 */
   .react-calendar__year-view__months__month {
-    border-radius: 0.8rem;
-    background-color: ${(props) => props.theme.gray_5};
+    border-radius: 5px;
     padding: 0;
   }
 
   /* 네비게이션 현재 월 스타일 적용 */
   .react-calendar__tile--hasActive {
-    background-color: ${(props) => props.theme.primary_2};
+    background-color: #ff4948;
     abbr {
       color: white;
     }
@@ -98,31 +93,18 @@ export const StyledCalendarWrapper = styled.div`
     padding: 20px 6.6667px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: ${(props) => props.theme.gray_1};
   }
 
-  /* 선택한 날짜 스타일 적용 */
+  /* 선택한 월 스타일 적용 */
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus,
   .react-calendar__tile--active {
-    background-color: ${(props) => props.theme.yellow_2};
     color: #ff4948;
-    border-radius: 0.3rem;
+    border-radius: 5px;
   }
 `;
 
 export const StyledCalendar = styled(Calendar)``;
-
-/* 오늘 날짜에 텍스트 삽입 스타일 */
-export const StyledToday = styled.div`
-  font-size: 10px;
-  color: ${(props) => props.theme.br_2};
-  font-weight: 600;
-  position: absolute;
-  top: 65%;
-  left: 50%;
-  transform: translateX(-50%);
-`;
 
 /* 출석한 날짜에 점 표시 스타일 */
 export const StyledMorningDot = styled.div`
@@ -130,7 +112,7 @@ export const StyledMorningDot = styled.div`
   width: 0.3rem;
   height: 0.3rem;
   position: absolute;
-  top: 60%;
+  top: 70%;
   left: 42%;
   transform: translateX(-50%);
 `;
@@ -140,7 +122,7 @@ export const StyledAfternoonDot = styled.div`
   width: 0.3rem;
   height: 0.3rem;
   position: absolute;
-  top: 60%;
+  top: 70%;
   left: 58%;
   transform: translateX(-50%);
 `;

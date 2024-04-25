@@ -1,7 +1,6 @@
 import {
   StyledCalendarWrapper,
   StyledCalendar,
-  StyledToday,
   StyledMorningDot,
   StyledAfternoonDot,
   GreenDot,
@@ -76,18 +75,10 @@ const MiniCalendar = ({ data }: Props) => {
           onActiveStartDateChange={({ activeStartDate }) =>
             setActiveStartDate(activeStartDate)
           }
-          // 오늘 날짜에 '오늘' 텍스트 삽입하고 출석한 날짜에 점 표시를 위한 설정
-          tileContent={({ date, view }) => {
+          tileContent={({ date }) => {
             const html = [];
             const formattedDate = moment(date).format("YYYY-MM-DD");
             const attendance = attendData[formattedDate];
-            if (
-              view === "month" &&
-              date.getMonth() === today.getMonth() &&
-              date.getDate() === today.getDate()
-            ) {
-              html.push(<StyledToday key={"today"}>오늘</StyledToday>);
-            }
             if (attendance) {
               html.push(
                 <StyledMorningDot
