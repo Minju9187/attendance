@@ -39,7 +39,15 @@ export default function Survey() {
       <Wrap>
         {data.length !== 0 ? (
           data.map((userData, i) => {
-            return <UserList allData={data} data={userData} idx={i} key={i} />;
+            return (
+              <UserList
+                allData={data}
+                data={userData}
+                day={day}
+                idx={i}
+                key={i}
+              />
+            );
           })
         ) : (
           <p>참여 여부 조사 페이지가 아직 생성되지 않았습니다.</p>

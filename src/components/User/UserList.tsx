@@ -13,20 +13,17 @@ interface UserData {
 interface UserListProps {
   allData: UserData[];
   data: UserData;
+  day: string | undefined;
   idx: number;
 }
 
-export default function UserList({ allData, data, idx }: UserListProps) {
+export default function UserList({ allData, data, day, idx }: UserListProps) {
   const { userId, username, 오전참여, 오후참여 } = data;
   const [firstTime, setFirstTime] = useState<boolean>(오전참여);
   const [secondTime, setSecondTime] = useState<boolean>(오후참여);
   const user = localStorage.getItem("userId");
-  const dateToday = new Date();
-  const dateTomo = new Date(dateToday.setDate(dateToday.getDate() + 1));
-  const yearTomo = dateTomo.getFullYear();
-  const monthTomo = String(dateTomo.getMonth() + 1).padStart(2, "0");
-  const dayTomo = String(dateTomo.getDate()).padStart(2, "0");
-  const tomorrow = yearTomo + "-" + monthTomo + "-" + dayTomo;
+
+  console.log(allData, data, day, idx);
 
   const handleActivateBtn = (): boolean => {
     return user === userId;
@@ -34,13 +31,16 @@ export default function UserList({ allData, data, idx }: UserListProps) {
 
   const updateSurveyData = async (): Promise<void> => {
     try {
-      const collectionRef = doc(db, "survey", tomorrow);
-      const docSnapshot = await getDoc(collectionRef);
-      if (docSnapshot.exists()) {
-        await updateDoc(collectionRef, { arr: JSON.stringify(allData) });
-      } else {
-        // 문서가 없으면 새로운 문서를 생성하여 데이터를 추가합니다.
-        await setDoc(collectionRef, { arr: JSON.stringify(allData) });
+      if (day) {
+        const collectionRef = doc(db, "survey", day);
+        const docSnapshot = await getDoc(collectionRef);
+
+        if (docSnapshot.exists()) {
+          await updateDoc(collectionRef, { arr: JSON.stringify(allData) });
+        } else {
+          // 문서가 없으면 새로운 문서를 생성하여 데이터를 추가합니다.
+          await setDoc(collectionRef, { arr: JSON.stringify(allData) });
+        }
       }
     } catch (error) {
       console.error("Error adding document: ", error);
