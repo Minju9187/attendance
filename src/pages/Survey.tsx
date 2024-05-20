@@ -34,12 +34,20 @@ export default function Survey() {
   return (
     <>
       <Topbar />
-      <SurveyDate>{day}</SurveyDate>
       <Title>참여 여부 조사</Title>
+      <SurveyDate>{day}</SurveyDate>
       <Wrap>
         {data.length !== 0 ? (
           data.map((userData, i) => {
-            return <UserList allData={data} data={userData} idx={i} key={i} />;
+            return (
+              <UserList
+                allData={data}
+                data={userData}
+                day={day}
+                idx={i}
+                key={i}
+              />
+            );
           })
         ) : (
           <p>참여 여부 조사 페이지가 아직 생성되지 않았습니다.</p>
@@ -50,14 +58,15 @@ export default function Survey() {
   );
 }
 
-const SurveyDate = styled.div`
-  margin-top: 30px;
-  font-size: 30px;
-  text-align: center;
-`;
-
 const Title = styled.h1`
   font-size: 25px;
+  text-align: center;
+  margin-top: 30px;
+`;
+
+const SurveyDate = styled.div`
+  margin-top: 15px;
+  font-size: 30px;
   text-align: center;
 `;
 
