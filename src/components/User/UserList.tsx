@@ -23,8 +23,6 @@ export default function UserList({ allData, data, day, idx }: UserListProps) {
   const [secondTime, setSecondTime] = useState<boolean>(오후참여);
   const user = localStorage.getItem("userId");
 
-  console.log(allData, data, day, idx);
-
   const handleActivateBtn = (): boolean => {
     return user === userId;
   };
