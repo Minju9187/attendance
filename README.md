@@ -41,9 +41,9 @@ PW: test123!
 
 <div align="center">
 
-<figure><img src="" alt="" width="360"><figcaption></figcaption></figure>
+<figure><img src="https://github.com/Minju9187/codingapple/assets/97059373/567082c8-d481-4a6c-8f18-047e404f877b" alt="출석체크" width="360"><figcaption></figcaption></figure>
 
-<figure><img src="" alt="" width="360"><figcaption></figcaption></figure>
+<figure><img src="https://github.com/Minju9187/codingapple/assets/97059373/93823ac8-26f4-4624-acda-45b56e5140a3" alt="참석여부조사" width="360"><figcaption></figcaption></figure>
 
 </div>
 
@@ -51,8 +51,8 @@ PW: test123!
 
 <div align="center">
 
-<figure><img src="" alt="" width="360"><figcaption></figcaption></figure>
+<figure><img src="https://github.com/Minju9187/codingapple/assets/97059373/02b457ee-1d4b-4f82-bf8c-a615e7edee90" alt="캘린더" width="360"><figcaption></figcaption></figure>
 
-<figure><img src="" alt="" width="360"><figcaption></figcaption></figure>
+<figure><img src="https://github.com/Minju9187/codingapple/assets/97059373/dca09d27-cd06-4c41-bc91-3f0cb1187fd8" alt="프로필" width="360"><figcaption></figcaption></figure>
 
 </div>

@@ -76,7 +76,7 @@ export default function Home() {
         alert("지각하였습니다.");
         localStorage.setItem(today + "Morning", "true");
         setIsMorningChecked(true);
-      } else if ((hours == 8 && minutes < 55) || hours < 8)
+      } else if ((hours == 8 && minutes < 55) || hours < 8 || hours >= 12)
         alert("출석체크시간이 아닙니다.");
       else {
         state = "결석";
@@ -99,7 +99,7 @@ export default function Home() {
         alert("지각하였습니다.");
         localStorage.setItem(today + "Afternoon", "true");
         setIsAfternoonChecked(true);
-      } else if ((hours == 12 && minutes < 55) || hours < 12)
+      } else if ((hours == 12 && minutes < 55) || hours < 12 || hours >= 4)
         alert("출석체크시간이 아닙니다.");
       else {
         state = "결석";
