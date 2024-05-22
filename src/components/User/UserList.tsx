@@ -102,6 +102,7 @@ const UserInfo = styled.div`
   flex-direction: column;
   width: 156px;
   height: 120px;
+  margin: 0 19.5px;
 `;
 
 const InfoName = styled.div`

@@ -50,7 +50,7 @@ export default function Survey() {
             );
           })
         ) : (
-          <p>참여 여부 조사 페이지가 아직 생성되지 않았습니다.</p>
+          <Notion>참여 여부 조사 페이지가 아직 생성되지 않았습니다.</Notion>
         )}
       </Wrap>
       <Navbar />
@@ -65,14 +65,18 @@ const Title = styled.h1`
 `;
 
 const SurveyDate = styled.div`
-  margin-top: 15px;
-  font-size: 30px;
+  margin-top: 5px;
+  margin-bottom: 25px;
+  font-size: 20px;
+  color: gray;
   text-align: center;
 `;
 
 const Wrap = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
+`;
+
+const Notion = styled.div`
+  margin: 0 auto;
 `;
