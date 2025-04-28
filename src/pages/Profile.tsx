@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 import Topbar from "@/components/Topbar/Topbar";
 import Navbar from "@/components/Navbar/Navbar";
 import styled from "styled-components";
-import { tomorrow } from "@/components/Common/date";
+import { tomorrow } from "@/utils/date";
 
 interface UserData {
   userId: string;

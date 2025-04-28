@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { today, tomorrow } from "@/components/Common/date";
+import { today, tomorrow } from "@/utils/date";
 
 interface UserData {
   userId: string;
@@ -34,10 +34,10 @@ export default function Home() {
   const user = localStorage.getItem("userId");
 
   const [isMorningChecked, setIsMorningChecked] = useState(
-    localStorage.getItem(today + "Morning") === "true"
+    localStorage.getItem(today + "Morning") === "true",
   );
   const [isAfternoonChecked, setIsAfternoonChecked] = useState(
-    localStorage.getItem(today + "Afternoon") === "true"
+    localStorage.getItem(today + "Afternoon") === "true",
   );
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function Home() {
   const addMyCheck = async (
     today: string,
     time: string,
-    state: string
+    state: string,
   ): Promise<void> => {
     try {
       if (!user) return;
