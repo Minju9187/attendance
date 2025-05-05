@@ -1,18 +1,27 @@
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import { db, auth } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import Button from "@/components/Common/Button";
+import Input from "@/components/Common/Input";
+import { VALIDATION_MESSAGE } from "@/constants/messages";
+import { REGEX } from "@/constants/regex";
+import { auth } from "@/firebase";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { User } from "@/types/types";
+import {
+  createUserInFirestore,
+  deleteImageFromStorage,
+  uploadImageAndGetUrl,
+} from "@/utils/firebaseUtils";
 import { FirebaseError } from "firebase/app";
+import { createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-interface SignUpData {
+type SignUpData = {
+  image?: FileList | null;
   email: string;
   password: string;
   passwordCheck: string;
   username: string;
-  resolution?: string;
-}
+};
 
 export default function SignUp() {
   const {
@@ -21,39 +30,60 @@ export default function SignUp() {
     watch,
     getValues,
     formState: { errors },
-  } = useForm<SignUpData>();
-
+  } = useForm<SignUpData>({ mode: "onChange", reValidateMode: "onChange" });
   const navigate = useNavigate();
   const watchEmail = watch("email");
   const watchPassword = watch("password");
   const watchPasswordCheck = watch("passwordCheck");
   const watchUsername = watch("username");
+  const imageFile = watch("image")?.[0];
+  const preview = useImageUpload(imageFile);
 
-  const onSubmit = async (data: SignUpData) => {
+  async function onSubmit(data: SignUpData) {
+    let imageUrl = "";
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
-        data.password
+        data.password,
       );
 
-      const user = {
+      if (data.image && data.image[0]) {
+        imageUrl = await uploadImageAndGetUrl(data.image[0]);
+      }
+
+      const user: User = {
         userId: userCredential.user.uid,
+        image: imageUrl,
         email: data.email,
         username: data.username,
-        resolution: data.resolution || "각오따위 없음",
-        오전출석: 0,
-        오후출석: 0,
-        지각: 0,
-        결석: 0,
-        isManager: false,
-        active: false,
+        totalStudyTime: 0,
+        totalMonthStudyTime: 0,
+        totalWeekStudyTime: 0,
+        activeStudy: 0,
+        completedStudy: 0,
+        follower: [],
+        following: [],
       };
-      const collectionRef = collection(db, "users");
-      await addDoc(collectionRef, user);
-      navigate("/");
+
+      await createUserInFirestore(user);
+
+      navigate("/login");
     } catch (error) {
-      const { code } = error as FirebaseError;
+      const { code, message } = error as FirebaseError;
+      console.error("회원가입 오류", code, message);
+
+      if (auth.currentUser) {
+        await deleteUser(auth.currentUser).catch((deleteErr) => {
+          console.error("계정 삭제 중 오류:", deleteErr);
+        });
+      }
+
+      if (imageUrl) {
+        await deleteImageFromStorage(imageUrl);
+      }
+
       switch (code) {
         case "auth/email-already-in-use":
           alert("이미 사용중인 이메일 입니다.");
@@ -68,130 +98,130 @@ export default function SignUp() {
           alert("회원가입에 실패하였습니다.");
       }
     }
-  };
+  }
 
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title>회원가입</Title>
-        <Label htmlFor="email">이메일</Label>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex min-h-screen flex-col p-10"
+      >
+        <h2 className="mb-11 text-center text-3xl font-bold">회원가입</h2>
+        <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full bg-gray-100">
+          {preview ? (
+            <img
+              src={preview}
+              alt="미리보기"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="flex h-full items-center justify-center text-sm text-gray-400">
+              이미지 없음
+            </span>
+          )}
+          <label
+            htmlFor="image"
+            className="absolute top-30 h-32 w-32 cursor-pointer rounded-full"
+          />
+          <input
+            id="image"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            {...register("image")}
+          />
+        </div>
         <Input
+          label="이메일"
+          labelClassName="mt-5 mb-1 font-bold text-gray-500"
           id="email"
           type="text"
           placeholder="이메일을 입력해 주세요"
           {...register("email", {
-            required: "이메일은 필수 입력입니다.",
+            required: VALIDATION_MESSAGE.email.required,
             pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "이메일 형식에 맞지 않습니다.",
+              value: REGEX.email,
+              message: VALIDATION_MESSAGE.email.pattern,
             },
           })}
+          error={errors.email?.message}
         />
-        {errors.email && <small role="alert">{errors.email.message}</small>}
-        <Label htmlFor="password">비밀번호</Label>
         <Input
+          label="비밀번호"
+          labelClassName="mt-5 mb-1 font-bold text-gray-500"
           id="password"
           type="password"
           placeholder="비밀번호를 입력해 주세요"
           autoComplete="password"
           {...register("password", {
-            required: "비밀번호는 필수 입력입니다.",
+            required: VALIDATION_MESSAGE.password.required,
             minLength: {
               value: 8,
-              message: "8자리 이상 비밀번호를 사용하세요.",
+              message: VALIDATION_MESSAGE.password.minLength,
             },
           })}
+          error={errors.password?.message}
         />
-        {errors.password && (
-          <small role="alert">{errors.password.message}</small>
-        )}
-        <Label htmlFor="passwordCheck">비밀번호 확인</Label>
         <Input
+          label="비밀번호 확인"
+          labelClassName="mt-5 mb-1 font-bold text-gray-500"
           id="passwordCheck"
           type="password"
-          placeholder="비밀번호를 다시 한번 입력해 주세요"
+          placeholder="비밀번호를 다시 한번 입력해주세요"
           autoComplete="password"
           {...register("passwordCheck", {
-            required: "비밀번호체크는 필수 입력입니다.",
+            required: VALIDATION_MESSAGE.passwordCheck.required,
             validate: (value) =>
               value === getValues("password") ||
-              "비밀번호가 일치하지 않습니다.",
+              VALIDATION_MESSAGE.passwordCheck.validate,
           })}
+          error={errors.passwordCheck?.message}
         />
-        <Label htmlFor="username">사용자 이름</Label>
         <Input
+          label="별명"
+          labelClassName="mt-5 mb-1 font-bold text-gray-500"
           id="username"
           type="text"
           placeholder="2~8자 이내여야 합니다."
           {...register("username", {
-            required: "사용자 이름을 꼭 적어주세요.",
-            pattern: {
-              value: /^.{2,8}$/,
-              message: "2자 이상 8자 이내로 입력해주세요",
+            required: VALIDATION_MESSAGE.username.required,
+            validate: (value) => {
+              if (value.length < 2 || value.length > 8) {
+                return VALIDATION_MESSAGE.username.pattern;
+              }
+              if (!REGEX.username.test(value)) {
+                return VALIDATION_MESSAGE.username.invalidChar;
+              }
+              return true;
             },
           })}
+          error={errors.username?.message}
         />
-        {errors.username && (
-          <small role="alert">{errors.username.message}</small>
-        )}
-        <Label htmlFor="resolution">각오</Label>
-        <Input
-          id="resolution"
-          type="text"
-          placeholder="짧게 각오를 적어주세요"
-          {...register("resolution", {})}
-        />
-        {errors.resolution && (
-          <small role="alert">{errors.resolution.message}</small>
-        )}
         <Button
           type="submit"
           disabled={
             !watchEmail ||
             !watchPassword ||
             !watchPasswordCheck ||
-            !watchUsername ||
-            Object.keys(errors).length > 0
+            !watchUsername
           }
+          variant="blue"
+          size="lg"
+          className="mt-5"
         >
-          다음
+          회원가입
         </Button>
-      </Form>
+        <div className="mt-3 flex justify-end">
+          <Button
+            variant="gray"
+            size="sm"
+            className="font-bold"
+            onClick={() => navigate("/login")}
+          >
+            로그인하러 가기
+          </Button>
+        </div>
+      </form>
     </>
   );
 }
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  padding: 30px;
-`;
-
-const Title = styled.h1`
-  font-size: 25px;
-  text-align: center;
-  margin-bottom: 50px;
-`;
-
-const Label = styled.label`
-  font-size: 12px;
-  color: #767676;
-  margin-bottom: 6px;
-`;
-
-const Input = styled.input`
-  border-bottom: 1px solid rgb(219, 219, 219);
-  margin-bottom: 16px;
-`;
-
-const Button = styled.button`
-  width: 322px;
-  height: 44px;
-  background-color: #ff4948;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  color: white;
-  border-radius: 30px;
-  font-weight: 500px;
-  font-size: 14px;
-  margin-bottom: 10px;
-`;

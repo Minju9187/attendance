@@ -3,7 +3,7 @@ import Topbar from "@/components/Topbar/Topbar";
 import MiniCalendar from "@/components/Calendar/MiniCalendar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../firebase";
+import { db } from "@/firebase";
 import { DocumentSnapshot, doc, getDoc } from "firebase/firestore";
 
 interface CalendarData {
