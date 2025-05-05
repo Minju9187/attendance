@@ -1,253 +1,73 @@
-import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar/Navbar";
-import Topbar from "@/components/Topbar/Topbar";
-import styled from "styled-components";
-import { db } from "../firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  increment,
-  query,
-  updateDoc,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { useState, useEffect } from "react";
-import { today, tomorrow } from "@/utils/date";
-
-interface UserData {
-  userId: string;
-  username: string;
-  오전참여: boolean;
-  오후참여: boolean;
-}
+import Button from "@/components/Common/Button";
+import Input from "@/components/Common/Input";
+import { useState } from "react";
+import { IoSearchSharp } from "react-icons/io5";
 
 export default function Home() {
-  const navigate = useNavigate();
-  const dateToday = new Date();
-  const hours = dateToday.getHours();
-  const minutes = dateToday.getMinutes();
-
-  const [data, setData] = useState<UserData | null>(null);
-  const user = localStorage.getItem("userId");
-
-  const [isMorningChecked, setIsMorningChecked] = useState(
-    localStorage.getItem(today + "Morning") === "true",
-  );
-  const [isAfternoonChecked, setIsAfternoonChecked] = useState(
-    localStorage.getItem(today + "Afternoon") === "true",
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const collectionRef = doc(db, "survey", today);
-      const docSnapshot = await getDoc(collectionRef);
-      if (docSnapshot.exists()) {
-        JSON.parse(docSnapshot.data().arr).forEach((v: UserData) => {
-          if (user === v.userId) setData(v);
-        });
-      } else {
-        console.error("문서가 존재하지 않습니다.");
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleActivateBtn = (time: "오전" | "오후") => {
-    if (data && (time === "오전" ? data.오전참여 : data.오후참여)) return true;
-    return false;
-  };
-
-  const handleCheck = (time: "오전" | "오후") => {
-    let state = "";
-    if (time == "오전") {
-      if ((hours == 8 && minutes >= 55) || (hours == 9 && minutes <= 5)) {
-        state = "출석";
-        alert("출석하였습니다");
-        setIsMorningChecked(true);
-        localStorage.setItem(today + "Morning", "true");
-      } else if (
-        (hours == 9 && minutes > 5) ||
-        (hours == 10 && minutes <= 30)
-      ) {
-        state = "지각";
-        alert("지각하였습니다.");
-        localStorage.setItem(today + "Morning", "true");
-        setIsMorningChecked(true);
-      } else if ((hours == 8 && minutes < 55) || hours < 8 || hours >= 12)
-        alert("출석체크시간이 아닙니다.");
-      else {
-        state = "결석";
-        alert("결석하였습니다.");
-        localStorage.setItem(today + "Morning", "true");
-        setIsMorningChecked(true);
-      }
-    }
-    if (time == "오후") {
-      if ((hours == 12 && minutes >= 55) || (hours == 13 && minutes <= 5)) {
-        state = "출석";
-        alert("출석체크되었습니다.");
-        localStorage.setItem(today + "Afternoon", "true");
-        setIsAfternoonChecked(true);
-      } else if (
-        (hours == 13 && minutes > 5) ||
-        (hours == 14 && minutes <= 30)
-      ) {
-        state = "지각";
-        alert("지각하였습니다.");
-        localStorage.setItem(today + "Afternoon", "true");
-        setIsAfternoonChecked(true);
-      } else if ((hours == 12 && minutes < 55) || hours < 12 || hours >= 4)
-        alert("출석체크시간이 아닙니다.");
-      else {
-        state = "결석";
-        alert("결석하였습니다.");
-        localStorage.setItem(today + "Afternoon", "true");
-        setIsAfternoonChecked(true);
-      }
-    }
-    if (state) {
-      checkData(time, state); // 변경된 state 값으로 checkData 함수 호출
-      addMyCheck(today, time, state);
-    }
-  };
-
-  const checkData = async (time: string, state: string): Promise<void> => {
-    const q = query(collection(db, "users"), where("userId", "==", user));
-    const querySnapshot = await getDocs(q);
-    for (const doc of querySnapshot.docs) {
-      const userRef = doc.ref;
-      if (state === "출석") {
-        await updateDoc(userRef, {
-          [time + state]: increment(1),
-        });
-      } else if (state === "지각") {
-        await updateDoc(userRef, {
-          [state]: increment(1),
-          [time + "출석"]: increment(1),
-        });
-      } else if (state === "결석") {
-        await updateDoc(userRef, {
-          [state]: increment(1),
-        });
-      }
-    }
-  };
-
-  const addMyCheck = async (
-    today: string,
-    time: string,
-    state: string,
-  ): Promise<void> => {
-    try {
-      if (!user) return;
-      const collectionRef = doc(db, "calendar", user);
-      const docSnapshot = await getDoc(collectionRef);
-      if (docSnapshot.exists()) {
-        const existingData = docSnapshot.data();
-        const existingString = existingData[today];
-        const updatedString = existingString + "," + time + ":" + state;
-        if (existingString == undefined) {
-          await updateDoc(collectionRef, { [today]: time + ":" + state });
-        } else {
-          await updateDoc(collectionRef, { [today]: updatedString });
-        }
-      } else {
-        // 문서가 없으면 새로운 문서를 생성하여 데이터를 추가합니다.
-        await setDoc(collectionRef, { [today]: time + ":" + state });
-      }
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
-  };
+  const [text, setText] = useState("");
+  const [studyArr, setStudyArr] = useState([]);
+  const [weeklyTodos, setWeeklyTodos] = useState([]);
+  const [todayTodos, setTodayTodos] = useState([]);
 
   return (
     <>
-      <Topbar />
-      <Title>출석체크</Title>
-      <Wrap>
-        <CheckBox>
-          <Span>오전(출석)</Span>
-          <p>9:00 ~ 12:00</p>
-          <CheckButton
-            name="오전"
-            disabled={!handleActivateBtn("오전") || isMorningChecked}
-            onClick={() => handleCheck("오전")}
-          >
-            Check
-          </CheckButton>
-        </CheckBox>
-        <CheckBox>
-          <Span>오후(출석)</Span>
-          <p>13:00 ~ 16:00</p>
-          <CheckButton
-            name="오후"
-            disabled={!handleActivateBtn("오후") || isAfternoonChecked}
-            onClick={() => handleCheck("오후")}
-          >
-            Check
-          </CheckButton>
-        </CheckBox>
-      </Wrap>
-      <Button
-        onClick={() => {
-          navigate(`/survey/${tomorrow}`);
-        }}
+      <form
+        className="flex w-full items-center justify-center gap-2 rounded-4xl border-2 p-2 pr-5 pl-5"
+        onSubmit={() => console.log("제출")}
       >
-        참석 여부 체크하러 가기
-      </Button>
-      <Navbar />
+        <Input
+          type="text"
+          value={text}
+          placeholder="스터디 또는 스터디원을 입력하세요"
+          variant="none"
+          onChange={(e) => setText(e.target.value)}
+        ></Input>
+        <IoSearchSharp
+          size={30}
+          onClick={() => {
+            console.log(text);
+            setText("");
+          }}
+        />
+      </form>
+      <div className="mt-5 rounded-2xl border-2 border-gray-300 p-4">
+        <h2>오늘 참여할 스터디</h2>
+        <div>
+          {studyArr.length ? (
+            studyArr.map(() => <p>스터디</p>)
+          ) : (
+            <>
+              <p>참여중인 스터디가 없습니다.</p>
+              <Button>스터디 참여하러가기</Button>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="mt-5 rounded-2xl border-2 border-gray-300 p-4">
+        <h2>해야할 일</h2>
+        <h3>이번 주 할 일</h3>
+        <div>
+          {weeklyTodos.length ? (
+            weeklyTodos.map(() => <p>스터디</p>)
+          ) : (
+            <>
+              <p>이번 주 할 일이 비어있습니다.</p>
+              <Button>할 일 추가하러가기</Button>
+            </>
+          )}
+        </div>
+        <h3>오늘 할 일</h3>
+        <div>
+          {todayTodos.length ? (
+            todayTodos.map(() => <p>스터디</p>)
+          ) : (
+            <>
+              <p>오늘 할 일이 비어있습니다.</p>
+              <Button>오늘 할 일 추가하러가기</Button>
+            </>
+          )}
+        </div>
+      </div>
     </>
   );
 }
-
-const Title = styled.h1`
-  font-size: 25px;
-  text-align: center;
-  margin-top: 30px;
-`;
-
-const Wrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-`;
-
-const CheckBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Span = styled.span`
-  font-size: 14px;
-`;
-
-const CheckButton = styled.button`
-  width: 156px;
-  height: 60px;
-  color: white;
-  font-size: 25px;
-  background-color: #ff4948;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  border-radius: 20px;
-  margin-top: 10px;
-`;
-
-const Button = styled.button`
-  width: 322px;
-  height: 44px;
-  background-color: #ff4948;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  color: white;
-  border-radius: 30px;
-  font-weight: 500px;
-  font-size: 14px;
-  margin: 10px auto;
-`;

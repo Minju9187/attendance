@@ -5,9 +5,9 @@ import BasicLayout from "./styles/BasicLayout";
 const App = () => {
   return (
     <>
-      <BasicLayout>
-        <Router />
-      </BasicLayout>
+      {/* <BasicLayout> */}
+      <Router />
+      {/* </BasicLayout> */}
     </>
   );
 };
