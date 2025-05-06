@@ -4,16 +4,9 @@ import Home from "@/pages/Home";
 import Study from "@/pages/Study";
 import Record from "@/pages/Record";
 import Todos from "@/pages/Todos";
-import MyPage from "@/pages/MyPage";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
-// import Home from "@/pages/Home";
-// import SignIn from "@/pages/SignIn";
-// import SignUp from "@/pages/SignUp";
-// import Survey from "@/pages/Survey";
-// import Profile from "@/pages/Profile";
-// import Calendar from "@/pages/Calendar";
-// import ProtectedRoute from "./ProtectedRoute";
+import Profile from "@/pages/Profile";
 
 export default function Router() {
   return (
@@ -24,7 +17,7 @@ export default function Router() {
           <Route path="/study" element={<Study />} />
           <Route path="/record" element={<Record />} />
           <Route path="/todos" element={<Todos />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/profile/:uid" element={<Profile />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

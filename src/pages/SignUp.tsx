@@ -4,7 +4,7 @@ import { VALIDATION_MESSAGE } from "@/constants/messages";
 import { REGEX } from "@/constants/regex";
 import { auth } from "@/firebase";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { User } from "@/types/types";
+import { UserData } from "@/types/types";
 import {
   createUserInFirestore,
   deleteImageFromStorage,
@@ -53,7 +53,7 @@ export default function SignUp() {
         imageUrl = await uploadImageAndGetUrl(data.image[0]);
       }
 
-      const user: User = {
+      const user: UserData = {
         userId: userCredential.user.uid,
         image: imageUrl,
         email: data.email,

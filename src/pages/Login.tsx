@@ -33,6 +33,7 @@ export default function Login() {
         data.password,
       );
       navigate("/");
+      window.localStorage.setItem("userId", userCredential.user.uid);
     } catch (error) {
       const { code } = error as FirebaseError;
       switch (code) {

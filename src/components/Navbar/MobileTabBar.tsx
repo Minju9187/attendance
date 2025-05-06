@@ -7,9 +7,8 @@ import { IoPerson } from "react-icons/io5";
 
 export default function MobileTabBar() {
   const location = useLocation();
-
+  const uid = window.localStorage.getItem("userId");
   const isActive = (path: string) => location.pathname === path;
-
   return (
     <nav className="fixed bottom-0 flex w-full justify-around border-t bg-white p-3">
       <Link to="/" className={"flex flex-grow justify-center"}>
@@ -36,10 +35,10 @@ export default function MobileTabBar() {
           className={`${isActive("/todos") ? "text-bm-red" : "text-gray-400"}`}
         />
       </Link>
-      <Link to="/mypage" className="flex flex-grow justify-center">
+      <Link to={`/profile/${uid}`} className="flex flex-grow justify-center">
         <IoPerson
           size={20}
-          className={`${isActive("/mypage") ? "text-bm-red" : "text-gray-400"}`}
+          className={`${isActive(`/profile/${uid}`) ? "text-bm-red" : "text-gray-400"}`}
         />
       </Link>
     </nav>
